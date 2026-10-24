@@ -1,0 +1,241 @@
+* 
+
+File $DEMO/sneps/like.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;  Demonstration of use of rules as data and use of default reasoning.
+;
+;  "Planes are like ships, except that they have a altitude, a pilot,
+;   a squadron, and a home-ship.  Planes do not have draft, displacement
+;   or name.  Planes also have types and classes, and have tail-numbers
+;   in place of hull-numbers."
+;		-- Naval Ocean Systems Center, Elements of Naval Domain
+;		   Knowledge, NOSC Working Paper, San Diego, CA, April, 1981,
+;		   p. 7.
+;
+;(snepslog echo)
+;
+(define member class rel a1 a2)
+
+(member class rel a1 a2)
+
+ CPU time : #.## 
+
+* 
+;
+;all(S)[Ship(S) V=> {Has-a(S, Cruise-speed), Has-a(S, Draft)}].
+(describe (assert forall $s
+		  ant (build member *s class ship)
+		   cq ((build rel has-a a1 *s a2 cruise-speed)
+		       (build rel has-a a1 *s a2 draft))))
+(M1! (forall V1) (ant (P1 (class ship) (member V1)))
+ (cq (P3 (a1 V1) (a2 draft) (rel has-a))
+  (P2 (a1 V1) (a2 cruise-speed) (rel has-a))))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+;Like(Plane, Ship).
+(describe (assert rel like a1 plane a2 ship))
+(M2! (a1 plane) (a2 ship) (rel like))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+;
+;all(Class1, Class2)  
+;	[Like(Class2, Class1)  
+;         V=> all(Rel, Obj) [ {all(x)[Class1(x) V=> Rel(x, Obj)]} 
+;			     V=> 
+;			     {all(x)[Class2(x) V=> delta(Rel(x, Obj))]}]].
+; TEMPORARILY, THIS RULE IS UNIVERSAL, NOT GENERIC
+(describe (assert forall ($class1 $class2)
+		  ant (build rel like a1 *class2 a2 *class1)
+		   cq (build forall ($rel $obj)
+			     ant (build forall $x
+					ant (build member *x class *class1)
+					 cq (build rel *rel a1 *x a2 *obj))
+			      cq (build forall $x
+					ant (build member *x class *class2)
+					 cq (build rel *rel a1 *x a2 *obj)))))
+(M3! (forall V3 V2) (ant (P4 (a1 V3) (a2 V2) (rel like)))
+ (cq
+  (P11 (forall V5 V4)
+   (ant
+    (P7 (forall V6) (ant (P5 (class V2) (member V6)))
+     (cq (P6 (a1 V6) (a2 V5) (rel V4)))))
+   (cq
+    (P10 (forall V7) (ant (P8 (class V3) (member V7)))
+     (cq (P9 (a1 V7) (a2 V5) (rel V4))))))))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+;
+;all(p) [thresh(1) {Plane(p), Has-a(p, Altitude), Has-a(p, Pilot), 
+;		   Has-a(p, Squadron), Has-a(p, Home-ship)}].
+(describe (assert forall $p
+		  ant (build member *p class plane)
+		   cq ((build member *p class plane)
+		       (build rel has-a a1 *p a2 altitude)
+		       (build rel has-a a1 *p a2 pilot)
+		       (build rel has-a a1 *p a2 squadron)
+		       (build rel has-a a1 *p a2 home-ship))))
+(M4! (forall V8) (ant (P12 (class plane) (member V8)))
+ (cq (P16 (a1 V8) (a2 home-ship) (rel has-a))
+  (P15 (a1 V8) (a2 squadron) (rel has-a)) (P14 (a1 V8) (a2 pilot) (rel has-a))
+  (P13 (a1 V8) (a2 altitude) (rel has-a)) (P12)))
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+;
+;all(p) [Plane(p) V=> andor(0,0) {Has-a(p, Draft), Has-a(p, Displacement), 
+;				 Has-a(p, Name)}].
+(describe (assert forall *p
+		  ant (build member *p class plane)
+		   cq (build min 0 max 0
+			     arg ((build rel has-a a1 *p a2 draft)
+				  (build rel has-a a1 *p a2 displacement)
+				  (build rel has-a a1 *p a2 name)))))
+(M5! (forall V8) (ant (P12 (class plane) (member V8)))
+ (cq
+  (P20 (min |0|) (max |0|)
+   (arg (P19 (a1 V8) (a2 name) (rel has-a))
+    (P18 (a1 V8) (a2 displacement) (rel has-a))
+    (P17 (a1 V8) (a2 draft) (rel has-a))))))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+;
+;all(x) [andor(0,1) {Has-a(x, Tail-number), Has-a(x, Hull-number)}].
+;all(p) [Plane(p) V=> Has-a(p, Tail-number)].
+(describe (assert forall *p
+		  ant (build member *p class plane)
+		   cq ((build rel has-a a1 *p a2 tail-number)
+		       (build min 0 max 0
+			      arg (build rel has-a a1 *p a2 hull-number)))))
+(M6! (forall V8) (ant (P12 (class plane) (member V8)))
+ (cq (P23 (min |0|) (max |0|) (arg (P22 (a1 V8) (a2 hull-number) (rel has-a))))
+  (P21 (a1 V8) (a2 tail-number) (rel has-a))))
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+;
+;Plane(Flying-Dutchman).
+(describe (assert member flying-dutchman class plane))
+(M7! (class plane) (member flying-dutchman))
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+;
+;Has-a(Flying-Dutchman, Cruise-speed)?
+(describe (deduce rel has-a a1 flying-dutchman a2 cruise-speed))
+(M8! (a1 flying-dutchman) (a2 cruise-speed) (rel has-a))
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+;
+;Has-a(Flying-Dutchman, Hull-number)?
+(describe (deduce rel has-a a1 flying-dutchman a2 hull-number))
+(M19! (min |0|) (max |0|)
+ (arg (M18 (a1 flying-dutchman) (a2 hull-number) (rel has-a))))
+
+(M19!)
+
+ CPU time : #.## 
+
+* 
+;
+;Has-a(Flying-Dutchman, Draft)?
+(describe (deduce rel has-a a1 flying-dutchman a2 draft))
+
+ A contradiction was detected within context default-defaultct.
+ The contradiction involves the newly derived proposition:
+   (M23! (a1 (flying-dutchman)) (a2 (draft)) (rel (has-a))) 
+ and the previously existing proposition:
+   (M30! (min 0) (max 0)
+ (arg (M29 (a1 (flying-dutchman)) (a2 (displacement)) (rel (has-a)))
+  (M28 (a1 (flying-dutchman)) (a2 (name)) (rel (has-a)))
+  (M23! (a1 (flying-dutchman)) (a2 (draft)) (rel (has-a)))))
+ You have the following options:
+  1. [A]ttempt to resolve the contradiction automatically;
+  2. [C]ontinue anyway, knowing that a contradiction is derivable;
+  3. [R]e-start the exact same run in a different context which is
+     not inconsistent;
+  4. [D]rop the run altogether.
+
+ (please type a, c, r or d)
+=><= 
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 : (M1! (forall V1) (ant (P1 (class (ship)) (member V1)))
+ (cq (P3 (a1 V1) (a2 (draft)) (rel (has-a)))
+  (P2 (a1 V1) (a2 (cruise-speed)) (rel (has-a)))))          (7 supported propositions: (M32! M31! M23! M17! M16! M8! M1!) )
+
+ 2 : (M2! (a1 (plane)) (a2 (ship)) (rel (like)))          (6 supported propositions: (M32! M23! M17! M12! M8! M2!) )
+
+ 3 : (M3! (forall V3 V2) (ant (P4 (a1 V3) (a2 V2) (rel (like))))
+ (cq
+  (P11 (forall V5 V4)
+   (ant
+    (P7 (forall V6) (ant (P5 (class V2) (member V6)))
+     (cq (P6 (a1 V6) (a2 V5) (rel V4)))))
+   (cq
+    (P10 (forall V7) (ant (P8 (class V3) (member V7)))
+     (cq (P9 (a1 V7) (a2 V5) (rel V4))))))))          (6 supported propositions: (M32! M23! M17! M12! M8! M3!) )
+
+ 4 : (M5! (forall V8) (ant (P12 (class (plane)) (member V8)))
+ (cq
+  (P20 (min 0) (max 0)
+   (arg (P19 (a1 V8) (a2 (name)) (rel (has-a)))
+    (P18 (a1 V8) (a2 (displacement)) (rel (has-a)))
+    (P17 (a1 V8) (a2 (draft)) (rel (has-a)))))))          (3 supported propositions: (M30! M24! M5!) )
+
+ 5 : (M7! (class (plane)) (member (flying-dutchman)))          (5 supported propositions: (M30! M24! M23! M8! M7!) )
+
+
+=><= 
+(M24! (min |0|) (max |0|)
+ (arg (M23 (a1 flying-dutchman) (a2 draft) (rel has-a))))
+
+(M24!)
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/like.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

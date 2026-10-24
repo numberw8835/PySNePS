@@ -1,0 +1,106 @@
+* 
+
+File $DEMO/sneps/bidir.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ; Node-Based, Bi-Directional Inference
+;
+; Define arcs.
+(define member class object property)
+
+(member class object property)
+
+ CPU time : #.## 
+
+* 
+;
+; for every p
+;  if p is a man or p is a woman then p is mortal and p is a rational animal.
+(describe (assert forall $p
+		     ant ((build member *p class man)
+			  (build member *p class woman))
+		      cq ((build object *p property mortal)
+			  (build member *p class "rational animal"))))
+(M1! (forall V1)
+ (ant (P2 (class woman) (member V1)) (P1 (class man) (member V1)))
+ (cq (P4 (class |rational animal|) (member V1))
+  (P3 (object V1) (property mortal))))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+; Socrates is a man.
+(describe (assert member Socrates class man))
+(M2! (class man) (member socrates))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+;
+; Backward inference looks for all possible antecedents,
+; but ignores other possible conclusions.
+; Is Socrates mortal?
+(describe (deduce object Socrates property mortal))
+(M3! (object socrates) (property mortal))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+;
+; Forward inference yields all possible conclusions.
+; Ada is a woman!
+(describe (add member Ada class woman))
+(M8! (object ada) (property mortal))
+(M7! (class |rational animal|) (member ada))
+(M6! (class woman) (member ada))
+
+(M8! M7! M6!)
+
+ CPU time : #.## 
+
+* 
+;
+; Backward inference to establish the context that what we are
+; interested in is whether anyone is a rational animal.
+; Who is a rational animal?
+(describe (deduce member *p class "rational animal"))
+(M9! (class |rational animal|) (member socrates))
+(M7! (class |rational animal|) (member ada))
+
+(M9! M7!)
+
+ CPU time : #.## 
+
+* 
+;
+; Now, when we add information, conclusions irrelevant to the context
+; are not drawn.
+; Turing is a man!
+(describe (add member Turing class man))
+(M11! (class |rational animal|) (member turing))
+(M10! (class man) (member turing))
+
+(M11! M10!)
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/bidir.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

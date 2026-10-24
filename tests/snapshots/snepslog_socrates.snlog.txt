@@ -1,0 +1,52 @@
+: 
+
+File $DEMO/snepslog/socrates.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;; Simple backward chaining through a rule:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+man(socrates).
+
+  wff1!:  man(socrates)    
+
+ CPU time : #.## 
+
+: all(x)(man(x) => mortal(x)).
+
+  wff2!:  all(x)(man(x) => mortal(x))    
+
+ CPU time : #.## 
+
+: mortal(socrates)?
+
+  wff3!:  mortal(socrates)    
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/socrates.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

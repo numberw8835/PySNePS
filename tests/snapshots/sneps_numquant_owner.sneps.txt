@@ -1,0 +1,195 @@
+* 
+
+File $DEMO/sneps/numquant/owner.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;
+;    Of 5 dog ownership relations, between 2 and 4 involve spoiling.
+;
+(resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+(define member class agent object rela)
+
+(member class agent object rela)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert etot 5 emin 2 emax 4 pevb ($x $y)
+		  &ant ((build member *x class person)
+			(build member *y class dog)
+			(build agent *x rela owns object *y))
+		  cq (build agent *x rela spoils object *y)))
+(M1! (pevb V2 V1) (emin |2|) (emax |4|) (etot |5|)
+ (&ant (P3 (agent V1) (object V2) (rela owns)) (P2 (class dog) (member V2))
+  (P1 (class person) (member V1)))
+ (cq (P4 (agent V1) (object V2) (rela spoils))))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert member john class person))
+(M2! (class person) (member john))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member jane class person))
+(M3! (class person) (member jane))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member mary class person))
+(M4! (class person) (member mary))
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member jim class person))
+(M5! (class person) (member jim))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert member rover class dog))
+(M6! (class dog) (member rover))
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member spot class dog))
+(M7! (class dog) (member spot))
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member lassie class dog))
+(M8! (class dog) (member lassie))
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert agent john rela owns object rover))
+(M9! (agent john) (object rover) (rela owns))
+
+(M9!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent john rela owns object spot))
+(M10! (agent john) (object spot) (rela owns))
+
+(M10!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent mary rela owns object lassie))
+(M11! (agent mary) (object lassie) (rela owns))
+
+(M11!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent jane rela owns object spot))
+(M12! (agent jane) (object spot) (rela owns))
+
+(M12!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent jim rela owns object lassie))
+(M13! (agent jim) (object lassie) (rela owns))
+
+(M13!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert agent john rela spoils object rover))
+(M14! (agent john) (object rover) (rela spoils))
+
+(M14!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent john rela spoils object spot))
+(M15! (agent john) (object spot) (rela spoils))
+
+(M15!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent jane rela spoils object spot))
+(M16! (agent jane) (object spot) (rela spoils))
+
+(M16!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent mary rela spoils object lassie))
+(M17! (agent mary) (object lassie) (rela spoils))
+
+(M17!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (deduce agent *x rela spoils object *y))
+(M17! (agent mary) (object lassie) (rela spoils))
+(M16! (agent jane) (object spot) (rela spoils))
+(M15! (agent john) (object spot) (rela spoils))
+(M14! (agent john) (object rover) (rela spoils))
+
+(M17! M16! M15! M14!)
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/numquant/owner.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

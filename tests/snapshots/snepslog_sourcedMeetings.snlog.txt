@@ -1,0 +1,239 @@
+: 
+
+File $DEMO/snepslog/sourcedMeetings.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Automatic Belief Revision
+;;;    Based on Explicit Sources and Object-Language Source-Ordering.
+;;; From Sections 4.3.1 and 4.3.2 of
+;;; Ari I. Fogel, On the Use of Epistemic Ordering Functions as Decision
+;;; Criteria for Automated and Assisted Belief Revision in SNePS, MS Thesis,
+;;; Department of Computer Science and Engineering, University at Buffalo,
+;;; Buffalo, NY, June 1, 2011.
+;;; Based on
+;;; Frances L. Johnson and Stuart C. Shapiro, Says Who?---Incorporating Source
+;;;    Credibility Issues into Belief Revision, Technical Report 99-08,
+;;;    Department of Computer Science and Engineering, University at Buffalo,
+;;;    Buffalo, NY, July 31, 1999.
+
+;;; Use mode 1
+set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+;;; Show supports
+expert
+
+
+ CPU time : #.## 
+
+: 
+;;; Always use automatic belief revision
+br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: 
+;;; Use an explicit object-language source-credibility order
+;;;    based on IsBetterSource(s1, s2)
+set-order source
+IsBetterSource(s1,s2) will mean that s1 is more credible than s2.
+
+
+ CPU time : #.## 
+
+: 
+;;; Consult the user when an entrenchment tie needs to be broken.
+br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: 
+;;; There are four kinds of meetings: official meetings, classes, work meetngs,
+;;; and social meetings.  Any meeting will be of exactly one of these types.
+all(m)(meeting(m) => xor{official(m), class(m), work(m), social(m)}).
+
+  wff1!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Any meeting will be either in the morning or the afternoon, but not both.
+all(m)(meeting(m) => xor{in(m,morning), in(m,afternoon)}).
+
+  wff2!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; If one person attends two different meetings, then one of the meetings has
+;;; to be in the morning, and the other in the afternoon.
+all(m1,m2,p)({attends(m1,p), attends(m2,p)} &=>
+		     (in(m1,morning) <=> in(m2,afternoon))).
+
+  wff3!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff3}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Philip, Peter, and John will attend work meetings.
+all(m)(work(m) => {attends(m, Philip), attends(m, Peter), attends(m, John)}).
+
+  wff4!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff4}>}  
+
+ CPU time : #.## 
+
+: 
+;;; w is a work meeting
+and{meeting(w), work(w)}.
+
+  wff7!:  work(w) and meeting(w)  {<hyp,{wff7}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Peter prefers meetings in the morning.
+all(m)(meeting(m) => in(m,morning)). ; wff8
+
+  wff8!:  all(m)(meeting(m) => in(m,morning))  {<hyp,{wff8}>}  
+
+ CPU time : #.## 
+
+: HasSource(wff8, Peter).
+
+  wff9!:  hassource(all(m)(meeting(m) => in(m,morning)),peter)  {<hyp,{wff9}>}  
+
+ CPU time : #.## 
+
+: 
+;;; John prefers meetings in the afternoon.
+all(m)(meeting(m) => in(m,afternoon)). ; wff10
+
+  wff10!:  all(m)(meeting(m) => in(m,afternoon))  {<hyp,{wff10}>}  
+
+ CPU time : #.## 
+
+: HasSource(wff10, John).
+
+  wff11!:  hassource(all(m)(meeting(m) => in(m,afternoon)),john)  {<hyp,{wff11}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Philip prefers meetings in the morning.
+HasSource(wff8, Philip).
+
+  wff12!:  hassource(all(m)(meeting(m) => in(m,morning)),philip)  {<hyp,{wff12}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Peter's preference outweighs John's preference.
+IsBetterSource(Peter, John).
+
+  wff13!:  isbettersource(peter,john)  {<hyp,{wff13}>}  
+
+ CPU time : #.## 
+
+: 
+;;; John's preference outweighs Philip's preference
+IsBetterSource(John, Philip).
+
+  wff14!:  isbettersource(john,philip)  {<hyp,{wff14}>}  
+
+ CPU time : #.## 
+
+: 
+;;; IsBetterSource is transitive.
+all(x,y,z)({IsBetterSource(x,y), IsBetterSource(y,z)} &=> IsBetterSource(x,z)).
+
+  wff15!:  all(z,y,x)({isbettersource(y,z),isbettersource(x,y)} &=> {isbettersource(x,z)})  {<hyp,{wff15}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Note that unsourced assertions outweigh sourced assertions.
+
+;;; The knowledge base so far:
+list-asserted-wffs
+  wff15!:  all(z,y,x)({isbettersource(y,z),isbettersource(x,y)} &=> {isbettersource(x,z)})  {<hyp,{wff15}>}  
+  wff14!:  isbettersource(john,philip)  {<hyp,{wff14}>}  
+  wff13!:  isbettersource(peter,john)  {<hyp,{wff13}>}  
+  wff12!:  hassource(all(m)(meeting(m) => in(m,morning)),philip)  {<hyp,{wff12}>}  
+  wff11!:  hassource(all(m)(meeting(m) => in(m,afternoon)),john)  {<hyp,{wff11}>}  
+  wff10!:  all(m)(meeting(m) => in(m,afternoon))  {<hyp,{wff10}>}  
+  wff9!:  hassource(all(m)(meeting(m) => in(m,morning)),peter)  {<hyp,{wff9}>}  
+  wff8!:  all(m)(meeting(m) => in(m,morning))  {<hyp,{wff8}>}  
+  wff7!:  work(w) and meeting(w)  {<hyp,{wff7}>}  
+  wff4!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff4}>}  
+  wff3!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff3}>}  
+  wff2!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff2}>}  
+  wff1!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; When is the meeting?
+in(w,?when)?
+
+  wff19!:  ~in(w,afternoon)  {<der,{wff2,wff7,wff8}>}  
+  wff16!:  in(w,morning)  {<der,{wff7,wff8}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The revised knowledge base:
+list-asserted-wffs
+  wff41!:  ~official(w)  {<der,{wff1,wff7}>}  
+  wff40!:  ~social(w)  {<der,{wff1,wff7}>}  
+  wff39!:  ~class(w)  {<der,{wff1,wff7}>}  
+  wff38!:  xor{official(w),class(w),social(w),work(w)}  {<der,{wff1,wff7}>}  
+  wff34!:  ~(all(m)(meeting(m) => in(m,afternoon)))  {<ext,{wff2,wff7,wff8}>}  
+  wff31!:  isbettersource(peter,philip)  {<der,{wff13,wff14,wff15}>}  
+  wff27!:  xor{in(w,afternoon),in(w,morning)}  {<der,{wff2,wff7}>}  
+  wff25!:  attends(w,john)  {<der,{wff4,wff7}>}  
+  wff23!:  attends(w,peter)  {<der,{wff4,wff7}>}  
+  wff21!:  attends(w,philip)  {<der,{wff4,wff7}>}  
+  wff19!:  ~in(w,afternoon)  {<der,{wff2,wff7,wff8}>}  
+  wff16!:  in(w,morning)  {<der,{wff7,wff8}>}  
+  wff15!:  all(z,y,x)({isbettersource(y,z),isbettersource(x,y)} &=> {isbettersource(x,z)})  {<hyp,{wff15}>}  
+  wff14!:  isbettersource(john,philip)  {<hyp,{wff14}>}  
+  wff13!:  isbettersource(peter,john)  {<hyp,{wff13}>}  
+  wff12!:  hassource(all(m)(meeting(m) => in(m,morning)),philip)  {<hyp,{wff12}>}  
+  wff11!:  hassource(all(m)(meeting(m) => in(m,afternoon)),john)  {<hyp,{wff11}>}  
+  wff9!:  hassource(all(m)(meeting(m) => in(m,morning)),peter)  {<hyp,{wff9}>}  
+  wff8!:  all(m)(meeting(m) => in(m,morning))  {<hyp,{wff8}>}  
+  wff7!:  work(w) and meeting(w)  {<hyp,{wff7}>}  
+  wff6!:  work(w)  {<der,{wff7}>}  
+  wff5!:  meeting(w)  {<der,{wff7}>}  
+  wff4!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff4}>}  
+  wff3!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff3}>}  
+  wff2!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff2}>}  
+  wff1!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/sourcedMeetings.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

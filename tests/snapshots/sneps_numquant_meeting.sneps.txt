@@ -1,0 +1,134 @@
+* 
+
+File $DEMO/sneps/numquant/meeting.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;
+;  At least 3 of 5 professors are in meeting
+;
+(resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+(define member class agent rela object)
+
+(member class agent rela object)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert etot 5 emin 3 pevb $x
+	&ant (build member *x class professor)
+	cq  (build agent *x rela in object meeting)))
+(M1! (pevb V1) (emin |3|) (etot |5|) (&ant (P1 (class professor) (member V1)))
+ (cq (P2 (agent V1) (object meeting) (rela in))))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+; whoever is in the hall is not in the meeting
+;
+(describe (assert forall $x
+	ant (build agent *x rela in object hall)
+	cq (build min 0 max 0
+		  arg (build agent *x rela in object meeting))))
+(M2! (forall V2) (ant (P3 (agent V2) (object hall) (rela in)))
+ (cq
+  (P5 (min |0|) (max |0|) (arg (P4 (agent V2) (object meeting) (rela in))))))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert member pat class professor))
+(M3! (class professor) (member pat))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member gabor class professor))
+(M4! (class professor) (member gabor))
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member nick class professor))
+(M5! (class professor) (member nick))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member john class professor))
+(M6! (class professor) (member john))
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member stu class professor))
+(M7! (class professor) (member stu))
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert agent pat rela in object hall))
+(M8! (agent pat) (object hall) (rela in))
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert agent nick rela in object hall))
+(M9! (agent nick) (object hall) (rela in))
+
+(M9!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (deduce agent *x rela in object meeting))
+(M16! (agent stu) (object meeting) (rela in))
+(M15! (agent john) (object meeting) (rela in))
+(M14! (agent gabor) (object meeting) (rela in))
+(M13! (min |0|) (max |0|) (arg (M12 (agent nick) (object meeting) (rela in))))
+(M11! (min |0|) (max |0|) (arg (M10 (agent pat) (object meeting) (rela in))))
+
+(M16! M15! M14! M13! M11!)
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/numquant/meeting.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

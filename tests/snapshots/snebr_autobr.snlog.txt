@@ -1,0 +1,694 @@
+: 
+
+File $DEMO/snebr/autobr.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; ***************************************************************************
+;;; Using source credibility for culprit selection
+;;; ***************************************************************************
+;;; The knowledge base for this example was taken from:
+;;; Johnson, F. L. and Shapiro, S. C. (1999). Says Who? - Incorporating Source
+;;; Credibility Issues into Belief Revision. Technical Report 99-08, Department
+;;; of Computer Science and Engineering and Center for Multisource Information
+;;; Fusion and Center for Cognitive Science, State University of New York at
+;;; Buffalo, Buffalo, NY.
+set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: expert
+
+
+ CPU time : #.## 
+
+: br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: 
+;;; Use source credibilities as epistemic ordering criteria.
+;;; N.B. If a proposition has multiple sources, the behavior of autobr
+;;; will be undefined.
+set-order source
+IsBetterSource(s1,s2) will mean that s1 is more credible than s2.
+
+
+ CPU time : #.## 
+
+: 
+;;; The holy book is a better source than the professor.
+IsBetterSource(holybook, prof).
+
+  wff1!:  isbettersource(holybook,prof)  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The professor is a better source than the nerd.
+IsBetterSource(prof, nerd).
+
+  wff2!:  isbettersource(prof,nerd)  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The nerd is a better source than the sexist.
+IsBetterSource(nerd, sexist).
+
+  wff3!:  isbettersource(nerd,sexist)  {<hyp,{wff3}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Fran is a better source than the nerd.
+IsBetterSource(fran, nerd).
+
+  wff4!:  isbettersource(fran,nerd)  {<hyp,{wff4}>}  
+
+ CPU time : #.## 
+
+: 
+;;; IsBetterSource is a transitive relation
+all(x,y,z)({IsBetterSource(x,y), IsBetterSource(y,z)} &=> IsBetterSource(x,z))!
+
+  wff9!:  isbettersource(fran,sexist)  {<der,{wff3,wff4,wff5}>}  
+  wff8!:  isbettersource(prof,sexist)  {<der,{wff2,wff3,wff5}>}  
+  wff7!:  isbettersource(holybook,sexist)  {<der,{wff1,wff2,wff3,wff5}>}  
+  wff6!:  isbettersource(holybook,nerd)  {<der,{wff1,wff2,wff5}>}  
+  wff5!:  all(z,y,x)({isbettersource(y,z),isbettersource(x,y)} &=> {isbettersource(x,z)})  {<hyp,{wff5}>}  
+  wff4!:  isbettersource(fran,nerd)  {<hyp,{wff4}>}  
+  wff3!:  isbettersource(nerd,sexist)  {<hyp,{wff3}>}  
+  wff2!:  isbettersource(prof,nerd)  {<hyp,{wff2}>}  
+  wff1!:  isbettersource(holybook,prof)  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; All jocks are not smart.
+all(x)(jock(x)=>~smart(x)). ;wff10
+
+  wff10!:  all(x)(jock(x) => (~smart(x)))  {<hyp,{wff10}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The source of the statement 'All jocks are not smart' is the nerd.
+HasSource(wff10, nerd).
+
+  wff11!:  hassource(all(x)(jock(x) => (~smart(x))),nerd)  {<hyp,{wff11}>}  
+
+ CPU time : #.## 
+
+: 
+;;; All females are not smart.
+all(x)(female(x)=>~smart(x)). ;wff12
+
+  wff12!:  all(x)(female(x) => (~smart(x)))  {<hyp,{wff12}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The source of the statement 'All females are not smart' is the sexist.
+HasSource(wff12, sexist).
+
+  wff13!:  hassource(all(x)(female(x) => (~smart(x))),sexist)  {<hyp,{wff13}>}  
+
+ CPU time : #.## 
+
+: 
+;;; All graduate students are smart.
+all(x)(grad(x)=>smart(x)). ;wff14
+
+  wff14!:  all(x)(grad(x) => smart(x))  {<hyp,{wff14}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The source of the statement 'All graduate students are smart' is the
+;;; professor.
+HasSource(wff14, prof).
+
+  wff15!:  hassource(all(x)(grad(x) => smart(x)),prof)  {<hyp,{wff15}>}  
+
+ CPU time : #.## 
+
+: 
+;;; All old people are smart.
+all(x)(old(x)=>smart(x)). ;wff16
+
+  wff16!:  all(x)(old(x) => smart(x))  {<hyp,{wff16}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The source of the statement 'All old people are smart' is the holy book.
+HasSource(wff16, holybook).
+
+  wff17!:  hassource(all(x)(old(x) => smart(x)),holybook)  {<hyp,{wff17}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The source of the statement 'Fran is an old female jock who is a graduate
+;;; student' is fran.
+HasSource(and{jock(fran),grad(fran),female(fran),old(fran)},fran).
+
+  wff23!:  hassource(old(fran) and female(fran) and grad(fran) and jock(fran),fran)  {<hyp,{wff23}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The KB thus far
+list-asserted-wffs
+  wff23!:  hassource(old(fran) and female(fran) and grad(fran) and jock(fran),fran)  {<hyp,{wff23}>}  
+  wff17!:  hassource(all(x)(old(x) => smart(x)),holybook)  {<hyp,{wff17}>}  
+  wff16!:  all(x)(old(x) => smart(x))  {<hyp,{wff16}>}  
+  wff15!:  hassource(all(x)(grad(x) => smart(x)),prof)  {<hyp,{wff15}>}  
+  wff14!:  all(x)(grad(x) => smart(x))  {<hyp,{wff14}>}  
+  wff13!:  hassource(all(x)(female(x) => (~smart(x))),sexist)  {<hyp,{wff13}>}  
+  wff12!:  all(x)(female(x) => (~smart(x)))  {<hyp,{wff12}>}  
+  wff11!:  hassource(all(x)(jock(x) => (~smart(x))),nerd)  {<hyp,{wff11}>}  
+  wff10!:  all(x)(jock(x) => (~smart(x)))  {<hyp,{wff10}>}  
+  wff9!:  isbettersource(fran,sexist)  {<der,{wff3,wff4,wff5}>}  
+  wff8!:  isbettersource(prof,sexist)  {<der,{wff2,wff3,wff5}>}  
+  wff7!:  isbettersource(holybook,sexist)  {<der,{wff1,wff2,wff3,wff5}>}  
+  wff6!:  isbettersource(holybook,nerd)  {<der,{wff1,wff2,wff5}>}  
+  wff5!:  all(z,y,x)({isbettersource(y,z),isbettersource(x,y)} &=> {isbettersource(x,z)})  {<hyp,{wff5}>}  
+  wff4!:  isbettersource(fran,nerd)  {<hyp,{wff4}>}  
+  wff3!:  isbettersource(nerd,sexist)  {<hyp,{wff3}>}  
+  wff2!:  isbettersource(prof,nerd)  {<hyp,{wff2}>}  
+  wff1!:  isbettersource(holybook,prof)  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Fran is an old female jock who is a graduate student (asserted with forward
+;;; inference).
+;;; * Please be patient; this step takes about 40 seconds on a Core i7 860.
+and{jock(fran),grad(fran),female(fran),old(fran)}!
+
+  wff45!:  ~(all(x)(jock(x) => (~smart(x))))  {<ext,{wff16,wff22}>,<ext,{wff14,wff22}>}  
+  wff24!:  smart(fran)  {<der,{wff16,wff22}>,<der,{wff14,wff22}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The resulting knowledge base
+list-asserted-wffs
+  wff45!:  ~(all(x)(jock(x) => (~smart(x))))  {<ext,{wff16,wff22}>,<ext,{wff14,wff22}>}  
+  wff34!:  ~(all(x)(female(x) => (~smart(x))))  {<ext,{wff16,wff22}>}  
+  wff24!:  smart(fran)  {<der,{wff16,wff22}>,<der,{wff14,wff22}>}  
+  wff23!:  hassource(old(fran) and female(fran) and grad(fran) and jock(fran),fran)  {<hyp,{wff23}>}  
+  wff22!:  old(fran) and female(fran) and grad(fran) and jock(fran)  {<hyp,{wff22}>}  
+  wff21!:  old(fran)  {<der,{wff22}>}  
+  wff20!:  female(fran)  {<der,{wff22}>}  
+  wff19!:  grad(fran)  {<der,{wff22}>}  
+  wff18!:  jock(fran)  {<der,{wff22}>}  
+  wff17!:  hassource(all(x)(old(x) => smart(x)),holybook)  {<hyp,{wff17}>}  
+  wff16!:  all(x)(old(x) => smart(x))  {<hyp,{wff16}>}  
+  wff15!:  hassource(all(x)(grad(x) => smart(x)),prof)  {<hyp,{wff15}>}  
+  wff14!:  all(x)(grad(x) => smart(x))  {<hyp,{wff14}>}  
+  wff13!:  hassource(all(x)(female(x) => (~smart(x))),sexist)  {<hyp,{wff13}>}  
+  wff11!:  hassource(all(x)(jock(x) => (~smart(x))),nerd)  {<hyp,{wff11}>}  
+  wff9!:  isbettersource(fran,sexist)  {<der,{wff3,wff4,wff5}>}  
+  wff8!:  isbettersource(prof,sexist)  {<der,{wff2,wff3,wff5}>}  
+  wff7!:  isbettersource(holybook,sexist)  {<der,{wff1,wff2,wff3,wff5}>}  
+  wff6!:  isbettersource(holybook,nerd)  {<der,{wff1,wff2,wff5}>}  
+  wff5!:  all(z,y,x)({isbettersource(y,z),isbettersource(x,y)} &=> {isbettersource(x,z)})  {<hyp,{wff5}>}  
+  wff4!:  isbettersource(fran,nerd)  {<hyp,{wff4}>}  
+  wff3!:  isbettersource(nerd,sexist)  {<hyp,{wff3}>}  
+  wff2!:  isbettersource(prof,nerd)  {<hyp,{wff2}>}  
+  wff1!:  isbettersource(holybook,prof)  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; ***************************************************************************
+;;; Preferring non-fluents over fluents
+;;; ***************************************************************************
+
+set-mode-3
+
+Net reset
+In SNePSLOG Mode 3.
+Use define-frame <pred> <list-of-arc-labels>.
+
+achieve(x1) will be represented by {<action, achieve>, <object1, x1>}
+actplan(x1,x2) will be represented by {<act, x1>, <plan, x2>}
+believe(x1) will be represented by {<action, believe>, <object1, x1>}
+disbelieve(x1) will be represented by {<action, disbelieve>, <object1, x1>}
+adopt(x1) will be represented by {<action, adopt>, <object1, x1>}
+unadopt(x1) will be represented by {<action, unadopt>, <object1, x1>}
+do-all(x1) will be represented by {<action, do-all>, <object1, x1>}
+do-one(x1) will be represented by {<action, do-one>, <object1, x1>}
+effect(x1,x2) will be represented by {<act, x1>, <effect, x2>}
+else(x1) will be represented by {<else, x1>}
+goalplan(x1,x2) will be represented by {<goal, x1>, <plan, x2>}
+if(x1,x2) will be represented by {<condition, x1>, <then, x2>}
+ifdo(x1,x2) will be represented by {<if, x1>, <do, x2>}
+precondition(x1,x2) will be represented by {<act, x1>, <precondition, x2>}
+snif(x1) will be represented by {<action, snif>, <object1, x1>}
+sniterate(x1) will be represented by {<action, sniterate>, <object1, x1>}
+snsequence(x1,x2) will be represented by {<action, snsequence>, <object1, x1>, <object2, x2>}
+whendo(x1,x2) will be represented by {<when, x1>, <do, x2>}
+wheneverdo(x1,x2) will be represented by {<whenever, x1>, <do, x2>}
+withall(x1,x2,x3,x4) will be represented by {<action, withall>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+withsome(x1,x2,x3,x4) will be represented by {<action, withsome>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+
+
+ CPU time : #.## 
+
+: expert
+
+
+ CPU time : #.## 
+
+: 
+;;; When a contradiction is detected, automatically use the autobr subsystem
+;;; to resolve it.
+br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: 
+;;; When the autobr subsystem needs help on deciding which belief of a set of
+;;; beliefs is least important to keep, ask the user to make a choice rather
+;;; than arbitrarily picking one.
+br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: 
+;;; [OnFloor(x)] = The agent is on floor [x].
+define-frame OnFloor(nil onfloor)
+onfloor(x1) will be represented by {<onfloor, x1>}
+
+
+ CPU time : #.## 
+
+: 
+;;; [Location(x)] = The location of the agent is [x].
+;;; (In this example, x is either aboveGround or belowGround)
+define-frame Location(nil loc)
+location(x1) will be represented by {<loc, x1>}
+
+
+ CPU time : #.## 
+
+: define-frame Fluent(nil fluent)
+fluent(x1) will be represented by {<fluent, x1>}
+
+
+ CPU time : #.## 
+
+: 
+^ attach_primaction("believe")
+
+
+ CPU time : #.## 
+
+: ^ attach_primaction("disbelieve")
+
+
+ CPU time : #.## 
+
+: 
+;;; Use an entrenchment ordering that favors non-fluents over fluents
+set-order fluent
+Fluents will be less epistemically entrenched than non-fluents.
+
+
+ CPU time : #.## 
+
+: 
+;;; Establish what kinds of propositions are fluents, specifically:
+;;;   - The current floor on which the agent is located is something that
+;;;     may change over time.
+;;;   - The state of being above or below ground is something that may
+;;;     change over time.
+^ net.fluents = ["OnFloor", "Location"]
+
+
+ CPU time : #.## 
+
+: 
+;;; At any given time, the agent is either above ground level or below it.
+xor{Location(belowGround), Location(aboveGround)}.
+
+  wff3!:  xor{location(aboveground),location(belowground)}  {<hyp,{wff3}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Floors 1 and 2 are below ground level.
+{OnFloor(1), OnFloor(2)} => {Location(belowGround)}.
+
+  wff6!:  {onfloor(|2|),onfloor(|1|)} v=> {location(belowground)}  {<hyp,{wff6}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Floors 3 and 4 are above ground level.
+{OnFloor(3), OnFloor(4)} => {Location(aboveGround)}.
+
+  wff9!:  {onfloor(|4|),onfloor(|3|)} v=> {location(aboveground)}  {<hyp,{wff9}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Tell the agent to believe it is now on floor 1.
+perform believe(OnFloor(1))
+
+
+ CPU time : #.## 
+
+: 
+list-asserted-wffs
+  wff11!:  ~location(aboveground)  {<der,{wff3,wff4,wff6}>}  
+  wff9!:  {onfloor(|4|),onfloor(|3|)} v=> {location(aboveground)}  {<hyp,{wff9}>}  
+  wff6!:  {onfloor(|2|),onfloor(|1|)} v=> {location(belowground)}  {<hyp,{wff6}>}  
+  wff4!:  onfloor(|1|)  {<hyp,{wff4}>}  
+  wff3!:  xor{location(aboveground),location(belowground)}  {<hyp,{wff3}>}  
+  wff1!:  location(belowground)  {<der,{wff4,wff6}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Tell the agent to believe it is now on floor 4.
+perform believe(OnFloor(4))
+
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff14!:  ~location(belowground)  {<der,{wff3,wff8,wff9}>}  
+  wff13!:  ~onfloor(|1|)  {<ext,{wff3,wff6,wff8,wff9}>}  
+  wff9!:  {onfloor(|4|),onfloor(|3|)} v=> {location(aboveground)}  {<hyp,{wff9}>}  
+  wff8!:  onfloor(|4|)  {<hyp,{wff8}>}  
+  wff6!:  {onfloor(|2|),onfloor(|1|)} v=> {location(belowground)}  {<hyp,{wff6}>}  
+  wff3!:  xor{location(aboveground),location(belowground)}  {<hyp,{wff3}>}  
+  wff2!:  location(aboveground)  {<der,{wff8,wff9}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; ****************************************************************************
+;;; Results of selecting a minimally desired hypothesis for removal when there
+;;; are multiple no-goods
+;;; ****************************************************************************
+
+set-mode-3
+
+Net reset
+In SNePSLOG Mode 3.
+Use define-frame <pred> <list-of-arc-labels>.
+
+achieve(x1) will be represented by {<action, achieve>, <object1, x1>}
+actplan(x1,x2) will be represented by {<act, x1>, <plan, x2>}
+believe(x1) will be represented by {<action, believe>, <object1, x1>}
+disbelieve(x1) will be represented by {<action, disbelieve>, <object1, x1>}
+adopt(x1) will be represented by {<action, adopt>, <object1, x1>}
+unadopt(x1) will be represented by {<action, unadopt>, <object1, x1>}
+do-all(x1) will be represented by {<action, do-all>, <object1, x1>}
+do-one(x1) will be represented by {<action, do-one>, <object1, x1>}
+effect(x1,x2) will be represented by {<act, x1>, <effect, x2>}
+else(x1) will be represented by {<else, x1>}
+goalplan(x1,x2) will be represented by {<goal, x1>, <plan, x2>}
+if(x1,x2) will be represented by {<condition, x1>, <then, x2>}
+ifdo(x1,x2) will be represented by {<if, x1>, <do, x2>}
+precondition(x1,x2) will be represented by {<act, x1>, <precondition, x2>}
+snif(x1) will be represented by {<action, snif>, <object1, x1>}
+sniterate(x1) will be represented by {<action, sniterate>, <object1, x1>}
+snsequence(x1,x2) will be represented by {<action, snsequence>, <object1, x1>, <object2, x2>}
+whendo(x1,x2) will be represented by {<when, x1>, <do, x2>}
+wheneverdo(x1,x2) will be represented by {<whenever, x1>, <do, x2>}
+withall(x1,x2,x3,x4) will be represented by {<action, withall>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+withsome(x1,x2,x3,x4) will be represented by {<action, withsome>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+
+
+ CPU time : #.## 
+
+: expert
+
+
+ CPU time : #.## 
+
+: br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: ^ net.br_totalorder = lambda net, lhs, rhs: True
+
+
+ CPU time : #.## 
+
+: 
+;;; [Walk(prep, obj)] = It walks [prep] a [obj].
+define-frame Walk(verb prep obj)
+walk(x1,x2) will be represented by {<verb, walk>, <prep, x1>, <obj, x2>}
+
+
+ CPU time : #.## 
+
+: 
+;;; [Talk(prep, obj]] = It talks [prep] a [obj].
+define-frame Talk(verb prep obj)
+talk(x1,x2) will be represented by {<verb, talk>, <prep, x1>, <obj, x2>}
+
+
+ CPU time : #.## 
+
+: 
+;;; We will use x to range over the above frames
+define-frame x(verb prep obj)
+x(x1,x2) will be represented by {<verb, x>, <prep, x1>, <obj, x2>}
+
+
+ CPU time : #.## 
+
+: 
+;;; [Isa(obj)] = It is a [obj].
+define-frame Isa(verb obj)
+isa(x1) will be represented by {<verb, isa>, <obj, x1>}
+
+
+ CPU time : #.## 
+
+: 
+;;; If it [x]s like a [y], it is a [y].
+all(x,y)(x(like,y)=>Isa(y)).
+
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; It walks like a duck.
+Walk(like, duck)!
+
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; It talks like a duck.
+Talk(like, duck)!
+
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>,<der,{wff1,wff4}>}  
+
+ CPU time : #.## 
+
+: 
+list-asserted-wffs
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>,<der,{wff1,wff4}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+;;; It's not a duck.
+~Isa(duck).
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+          (2 supported propositions: (wff3 wff1) )
+
+ 2 :   wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+          (2 supported propositions: (wff3 wff2) )
+
+ 3 :   wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+          (1 supported proposition: (wff5) )
+
+
+=><= 2
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+          (2 supported propositions: (wff3 wff1) )
+
+ 2 :   wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+          (2 supported propositions: (wff4 wff3) )
+
+ 3 :   wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+          (1 supported proposition: (wff5) )
+
+
+=><= 2
+
+  wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+
+ CPU time : #.## 
+
+: 
+list-asserted-wffs
+  wff7!:  ~walk(like,duck)  {<ext,{wff1,wff5}>}  
+  wff6!:  ~talk(like,duck)  {<ext,{wff1,wff5}>}  
+  wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Now let's try that again, but this time we'll select a hypothesis that
+;;; appears in both no-goods
+
+;;; Clear the knowledge base
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: 
+;;; If it [x]s like a [y], it is a [y].
+all(x,y)(x(like,y)=>Isa(y)).
+
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; It walks like a duck.
+Walk(like, duck)!
+
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; It talks like a duck.
+Talk(like, duck)!
+
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>,<der,{wff1,wff4}>}  
+
+ CPU time : #.## 
+
+: 
+list-asserted-wffs
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>,<der,{wff1,wff4}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; It's not a duck.
+~Isa(duck).
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+          (2 supported propositions: (wff3 wff1) )
+
+ 2 :   wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+          (2 supported propositions: (wff3 wff2) )
+
+ 3 :   wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+          (1 supported proposition: (wff5) )
+
+
+=><= 1
+
+  wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Note that after wff1 was selected as minimal, snebr remembered that wff1
+;;; was less desirable than wff5. At that point, the second no-good (which did
+;;; not appear) contained wff1, wff4, and wff5. wff5 was known not to be
+;;; minimally entrenched, and so there was no other way to remove the first
+;;; no-good without removing wff1. Since wff1 was present in the second
+;;; no-good, no further input from the user was required.
+
+list-asserted-wffs
+  wff6!:  ~(all(y,x)(x(like,y) => isa(y)))  {<ext,{wff2,wff5}>,<ext,{wff4,wff5}>}  
+  wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snebr/autobr.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

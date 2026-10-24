@@ -1,0 +1,35 @@
+: 
+
+File $DEMO/snepslog/example4.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: resetnet
+Warning: Wff resetnet not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+a and ~a !
+
+  wff2!:  ~a and a    
+  wff1!:  ~a    
+  a:   a    
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/example4.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

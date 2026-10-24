@@ -1,0 +1,100 @@
+* 
+
+File $DEMO/snepslog/pegasus.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* (resetnet)
+
+Net reset - Relations and paths are still defined
+
+
+ CPU time : #.## 
+
+* 
+(define mem class h-prop prop sub sup)
+
+(mem class h-prop prop sub sup)
+
+ CPU time : #.## 
+
+* 
+(assert h-prop tornado prop white)
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+(assert mem tornado class horses)
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+(assert h-prop  horses prop not-flies)
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+(assert h-prop  winged-horses prop flies)
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+(assert sub winged-horses sup horses)
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+(assert h-prop  winged-horses prop has-wings)
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+(assert mem pegasus class winged-horses)
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+(define-path h-prop (compose h-prop
+			     (kstar (compose sup- ! sub))
+			     (kstar (compose class- ! mem))))
+h-prop implied by the path (compose h-prop (kstar (compose sup- ! sub)) (kstar (compose class- ! mem)))
+h-prop- implied by the path (compose (kstar (compose mem- ! class)) (kstar (compose sub- ! sup)) h-prop-)
+
+
+ CPU time : #.## 
+
+* 
+(assert forall $x ant (build h-prop *x prop not-flies)
+	          cq (build min 0 max 0 arg (build h-prop *x prop flies)))
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+;(full-describe (deduce h-prop $who prop flies))
+
+End of $DEMO/snepslog/pegasus.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

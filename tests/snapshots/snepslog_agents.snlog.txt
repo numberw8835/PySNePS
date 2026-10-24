@@ -1,0 +1,228 @@
+: 
+
+File $DEMO/snepslog/agents.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Automatic Belief Revision Based on Fluents vs. Non-fluents.
+;;; From Section 4.3.3 of
+;;; Ari I. Fogel, On the Use of Epistemic Ordering Functions as Decision
+;;; Criteria for Automated and Assisted Belief Revision in SNePS, MS Thesis,
+;;; Department of Computer Science and Engineering, University at Buffalo,
+;;; Buffalo, NY, June 1, 2011. 
+
+;;;
+;;; Set SNePSLOG flags
+;;;
+
+;;; Use mode 3
+set-mode-3
+
+Net reset
+In SNePSLOG Mode 3.
+Use define-frame <pred> <list-of-arc-labels>.
+
+achieve(x1) will be represented by {<action, achieve>, <object1, x1>}
+actplan(x1,x2) will be represented by {<act, x1>, <plan, x2>}
+believe(x1) will be represented by {<action, believe>, <object1, x1>}
+disbelieve(x1) will be represented by {<action, disbelieve>, <object1, x1>}
+adopt(x1) will be represented by {<action, adopt>, <object1, x1>}
+unadopt(x1) will be represented by {<action, unadopt>, <object1, x1>}
+do-all(x1) will be represented by {<action, do-all>, <object1, x1>}
+do-one(x1) will be represented by {<action, do-one>, <object1, x1>}
+effect(x1,x2) will be represented by {<act, x1>, <effect, x2>}
+else(x1) will be represented by {<else, x1>}
+goalplan(x1,x2) will be represented by {<goal, x1>, <plan, x2>}
+if(x1,x2) will be represented by {<condition, x1>, <then, x2>}
+ifdo(x1,x2) will be represented by {<if, x1>, <do, x2>}
+precondition(x1,x2) will be represented by {<act, x1>, <precondition, x2>}
+snif(x1) will be represented by {<action, snif>, <object1, x1>}
+sniterate(x1) will be represented by {<action, sniterate>, <object1, x1>}
+snsequence(x1,x2) will be represented by {<action, snsequence>, <object1, x1>, <object2, x2>}
+whendo(x1,x2) will be represented by {<when, x1>, <do, x2>}
+wheneverdo(x1,x2) will be represented by {<whenever, x1>, <do, x2>}
+withall(x1,x2,x3,x4) will be represented by {<action, withall>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+withsome(x1,x2,x3,x4) will be represented by {<action, withsome>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+
+
+ CPU time : #.## 
+
+: 
+;;; Show supports
+expert
+
+
+ CPU time : #.## 
+
+: 
+;;; Always use automatic belief revision
+br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: 
+;; Use an entrenchment ordering in which non-fluents are more entrenched than fluents.
+set-order fluent
+Fluents will be less epistemically entrenched than non-fluents.
+
+
+ CPU time : #.## 
+
+: 
+;;; Automatically and arbitrarily break entrenchment ties.
+br-tie-mode auto
+Entrenchment ties will now be broken automatically
+
+
+ CPU time : #.## 
+
+: 
+;;;
+;;; Define frames
+;;;
+
+;;; Define the Direction frame
+define-frame Direction(nil d) "[d] is a direction."
+direction(x1) will be represented by {<d, x1>}
+
+
+ CPU time : #.## 
+
+: 
+;;; Define the Facing frame.
+define-frame Facing(nil dir) "I am facing direction [dir]"
+facing(x1) will be represented by {<dir, x1>}
+
+
+ CPU time : #.## 
+
+: 
+;;; Define the turn frame.
+define-frame turn(action newdir) "turn to [newdir]"
+turn(x1) will be represented by {<action, turn>, <newdir, x1>}
+
+
+ CPU time : #.## 
+
+: 
+;;;
+;;; Some settings that are done in Python
+;;;
+^^
+^^> 
+^^> # The Facing predicate is a fluent.
+^^> net.fluents = ["Facing"]
+^^> 
+^^> # Define the turn action.
+^^> @primaction
+... def turn(newdir):
+...     fresh_line()
+...     print(f"I'm turning to the {newdir[0].value}")
+... 
+^^> # Attach the turn and believe actions.
+^^> attach_primaction("turn", turn)
+^^> attach_primaction("believe")
+^^> ^^
+
+
+ CPU time : #.## 
+
+: 
+;;;
+;;; Domain Knowledge
+;;;
+
+;;; The directions are north, south, east, and west.
+Direction({north,south,east,west}).
+
+  wff1!:  direction({west,east,south,north})  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; At any given time, the agent is facing either north, south, east, or west.
+nexists(_,1,_)(d)(Direction(d): Facing(d)).
+
+  wff2!:  nexists(_,|1|,_)(d)[{direction(d)}:{facing(d)}]  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The effect of turning to direction d is to be facing d.
+all(d)(Direction(d) => Effect(turn(d), Facing(d))).
+
+  wff3!:  all(d)(direction(d) => effect(turn(d),facing(d)))  {<hyp,{wff3}>}  
+
+ CPU time : #.## 
+
+: 
+;;;
+;;; Initial situation
+;;;
+
+;;; Now, the agent is facing west.
+perform believe(Facing(west))
+
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base now:
+list-asserted-wffs
+  wff9!:  direction(north)  {<der,{wff1}>}  
+  wff8!:  direction(south)  {<der,{wff1}>}  
+  wff7!:  direction(east)  {<der,{wff1}>}  
+  wff6!:  direction(west)  {<der,{wff1}>}  
+  wff4!:  facing(west)  {<hyp,{wff4}>}  
+  wff3!:  all(d)(direction(d) => effect(turn(d),facing(d)))  {<hyp,{wff3}>}  
+  wff2!:  nexists(_,|1|,_)(d)[{direction(d)}:{facing(d)}]  {<hyp,{wff2}>}  
+  wff1!:  direction({west,east,south,north})  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;;
+;;; The agent performs
+;;;
+
+;;; The agent turns to the south.
+perform turn(south)
+I'm turning to the south
+
+
+ CPU time : #.## 
+
+: 
+;;; The resulting knowledge base:
+list-asserted-wffs
+  wff18!:  ~facing(east)  {<der,{wff1,wff2,wff11}>}  
+  wff16!:  ~facing(west)  {<der,{wff1,wff2,wff11}>}  
+  wff12!:  effect(turn(south),facing(south))  {<der,{wff1,wff3}>}  
+  wff11!:  facing(south)  {<hyp,{wff11}>}  
+  wff9!:  direction(north)  {<der,{wff1}>}  
+  wff8!:  direction(south)  {<der,{wff1}>}  
+  wff7!:  direction(east)  {<der,{wff1}>}  
+  wff6!:  direction(west)  {<der,{wff1}>}  
+  wff3!:  all(d)(direction(d) => effect(turn(d),facing(d)))  {<hyp,{wff3}>}  
+  wff2!:  nexists(_,|1|,_)(d)[{direction(d)}:{facing(d)}]  {<hyp,{wff2}>}  
+  wff1!:  direction({west,east,south,north})  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/agents.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

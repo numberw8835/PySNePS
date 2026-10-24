@@ -1,0 +1,154 @@
+;
+;;; CLUE Reasoning Example from Shapiro, 1979
+;
+(resetnet t)
+(define member class holder held)
+;
+^^
+def cards(kind):
+    """The cards of KIND (suspect, weapon, room, or card for all of them)."""
+    return snepsul("(find (member- class) {})", kind)
+
+@command
+def suspect(p):
+    return snepsul("(describe (assert member {0} class suspect) (assert member {0} class card))",
+                   p)
+
+@command
+def weapon(p):
+    return snepsul("(describe (assert member {0} class weapon) (assert member {0} class card))",
+                   p)
+
+@command
+def room(p):
+    return snepsul("(describe (assert member {0} class room) (assert member {0} class card))",
+                   p)
+
+players = []
+table = []
+
+@command
+def clue(*people):
+    global players, table
+    players = list(people)
+    table = players + players
+    for player in people:
+        snepsul("(describe (assert member {0} class player) (assert member {0} class hand))",
+                player)
+        for card in cards("card"):
+            snepsul("(build holder {} held {})", player, card)
+        snepsul("(describe (assert min {0} max {0} arg (find holder {1})))",
+                numdealt(player), player)
+    for card in cards("card"):
+        snepsul("(describe (assert min 1 max 1 arg (find held {0})"
+                " arg (build holder Envelope held {0})))", card)
+
+@command
+def suggest(player, suspect, weapon, room, responder, card):
+    for passed in between(player, responder):
+        has_none(passed, suspect, weapon, room)
+    if responder is not None:
+        if card is not None:
+            snepsul("(describe (add holder {} held {}))", responder, card)
+        else:
+            snepsul("(describe (add min 1 max 3 arg ((build holder {0} held {1})"
+                    " (build holder {0} held {2}) (build holder {0} held {3}))))",
+                    responder, suspect, weapon, room)
+
+def numdealt(player):
+    """How many cards PLAYER is dealt."""
+    held, n = numheldcards(), len(players)
+    return held // n + (0 if players.index(player) + 1 > held % n else 1)
+
+def numheldcards():
+    return len(cards("card")) - 3
+
+def between(player1, player2):
+    """The players after PLAYER1 and before PLAYER2 (all others if PLAYER2 is nil)."""
+    if player2 is None:
+        return [p for p in players if p != player1]
+    after = table[table.index(player1) + 1:]
+    return after[:after.index(player2)] if player2 in after else after
+
+def has_none(player, suspect, weapon, room):
+    snepsul("(describe (add min 0 max 0 arg ((build holder {0} held {1})"
+            " (build holder {0} held {2}) (build holder {0} held {3}))))",
+            player, suspect, weapon, room)
+
+def envelope_holds(kind):
+    """The propositions that the envelope holds a card of KIND."""
+    return [snepsul("(build holder Envelope held {})", card)[0] for card in cards(kind)]
+
+^^
+;
+(suspect Col.\ Mustard)
+;
+(suspect Prof.\ Plum)
+;
+;(suspect Miss\ Scarlet)
+;
+;(suspect Miss\ Peacock)
+;
+;(suspect Mrs.\ White)
+;
+;(suspect Mr.\ Green)
+;
+(weapon knife)
+;
+(weapon candlestick)
+;
+;(weapon rope)
+;
+;(weapon revolver)
+;
+;(weapon lead\ pipe)
+;
+;(weapon wrench)
+;
+(room hall)
+;
+(room lounge)
+;
+(room dining\ room)
+;
+(room kitchen)
+;
+;(room study)
+;
+;(room billiard\ room)
+;
+;(room library)
+;
+;(room conservatory)
+;
+;(room ballroom)
+;
+(describe (assert member Envelope class hand))
+;
+(describe (assert min 1 max 1 arg (^ envelope_holds("suspect"))))
+;
+(describe (assert min 1 max 1 arg (^ envelope_holds("weapon"))))
+;
+(describe (assert min 1 max 1 arg (^ envelope_holds("room"))))
+;
+(clue Don Chuck Bill Stu)
+;
+(describe (assert holder Don held Col.\ Mustard))
+;
+(describe (assert holder Don held knife))
+;
+(describe (deduce (3 0) holder Envelope held $x))
+;
+(suggest Stu Col.\ Mustard knife kitchen Don knife)
+;
+(suggest Don Col.\ Mustard knife dining\ room Stu dining\ room)
+;
+(suggest Chuck Prof.\ Plum candlestick lounge Bill nil)
+;
+(suggest Bill Prof.\ Plum knife hall Don knife)
+;
+(suggest Stu Prof.\ Plum candlestick dining\ room nil nil)
+;
+(suggest Don Col.\ Mustard knife hall Chuck hall)
+;
+(describe (deduce 0 holder Envelope held *x))

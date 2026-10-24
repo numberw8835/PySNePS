@@ -1,0 +1,35 @@
+: 
+
+File $DEMO/snepslog/example3.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: resetnet
+Warning: Wff resetnet not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+all (x,y) (x => x or y)!
+Warning: Universally quantified wff all(x y)((build ant x cq x) is missing a close parenthesis at: "or y)!
+".
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/example3.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

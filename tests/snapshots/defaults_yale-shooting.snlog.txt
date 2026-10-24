@@ -1,0 +1,114 @@
+: 
+
+File $DEMO/defaults/yale-shooting.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ; This demo only works with Maria Cravo's implementation of default rules:
+; (see the corresponding snepsul demo for more detailled explanations):
+;
+; 4.3 THE YALE SHOOTING PROBLEM USING SNePSLOG
+;
+default (f,e,s) ((t(f,s)) => (t(f,result(e,s))))
+Warning: Wff (build r default a1 f a2 e a3 s) not followed by terminal punctuation at "((t(f,s)) => (t(f,result(e,s))))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (s)  (t(loaded,result(load,s)))
+Warning: Wff (build forall ($s) r t a1 loaded a2 (build r result a1 load a2 *s)) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (s) ((t(loaded,s)) => (~applicable(wff1,alive,shoot,s)))
+Warning: Wff (build forall ($s) ant (build r t a1 loaded a2 *s) cq (build min 0 max 0 arg (build r applicable a1 wff1 a2 alive a3 shoot a4 *s))) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (s) ((t(loaded,s)) => (t(dead,result(shoot,s))))
+Warning: Wff (build forall ($s) ant (build r t a1 loaded a2 *s) cq (build r t a1 dead a2 (build r result a1 shoot a2 *s))) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: t(alive,situation0)
+Warning: Wff (build r t a1 alive a2 situation0) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: t(?f,result(shoot,result(wait,result(load,situation0))))?
+
+
+ CPU time : #.## 
+
+: belief-spaces 
+Warning: Wff belief-spaces not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: wff9 
+Warning: Wff wff9 not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: wff10 
+Warning: Wff wff10 not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: wff12
+Warning: Wff wff12 not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: wff14 
+Warning: Wff wff14 not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: wff16 
+Warning: Wff wff16 not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: wff18 
+Warning: Wff wff18 not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/defaults/yale-shooting.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

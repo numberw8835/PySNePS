@@ -1,0 +1,342 @@
+: 
+
+File $DEMO/snepslog/theorems.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: expert
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+;a1-
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p or p) => p ?
+
+  wff2!:  (andor(|1|,|2|){p}) => p  {<der,{}>}  
+
+ CPU time : #.## 
+
+: 
+;a2-
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: q => (p or q) ?
+
+
+ CPU time : #.## 
+
+: 
+;a3-
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p or q) => (q or p) ?
+
+
+ CPU time : #.## 
+
+: 
+;a4-
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (q => r) => ((p or q) => (p or r)) ?
+
+
+ CPU time : #.## 
+
+: 
+;pc13   lei da identidade
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: thresh(1) {p, p}?
+
+
+ CPU time : #.## 
+
+: 
+;pc14
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: p => (p or q) ?
+
+
+ CPU time : #.## 
+
+: 
+;pc15
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p and q) => p ?
+
+  wff2!:  (q and p) => p  {<der,{}>}  
+
+ CPU time : #.## 
+
+: 
+;pc16
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p and q) => q ?
+
+  wff2!:  (q and p) => q  {<der,{}>}  
+
+ CPU time : #.## 
+
+: 
+;pc17
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: p => (q => p) ?
+
+
+ CPU time : #.## 
+
+: 
+;pc18
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: ~p => (p => q) ?
+
+
+ CPU time : #.## 
+
+: 
+;pc19   lei da adjuncao
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: p => (q => (p and q)) ?
+
+
+ CPU time : #.## 
+
+: 
+;pc20  lei da permutacao
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: thresh(1) {p => (q => r), q => (p => r)} ?
+Warning: Bad punctuation in termSequence at "=> (q => r), q => (p => r)} ?
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+;pc21 lei do silogismo 1
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p => q) =>((q => r) => (p => r))?
+
+
+ CPU time : #.## 
+
+: 
+;pc22 lei do silogismo 2
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (q => r) => ((p => q) => (p => r))?
+
+
+ CPU time : #.## 
+
+: 
+;pc23  lei da importacao
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p => (q => r)) => ((p and q) => r)?
+
+  wff5!:  (p => (q => r)) => ((q and p) => r)  {<der,{}>}  
+
+ CPU time : #.## 
+
+: 
+;pc 24 lei da exportacao
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: ((p and q) => r) => (p => (q => r))?
+
+
+ CPU time : #.## 
+
+: 
+;pc25 lei da composicao
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p => q) => ((p => r) => (p => (q and r)))?
+
+
+ CPU time : #.## 
+
+: 
+;pc26
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p => q) => ((r => s) => ((p and r) => (q and s)))?
+
+
+ CPU time : #.## 
+
+: 
+;pc27 
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: (p => r) => ((q => r) => ((p or q) => r))?
+
+
+ CPU time : #.## 
+
+: 
+
+;pc28                 Da' erro     
+;clearkb
+;thresh(1) {thresh(1) {~p, q}, thresh(1) {p, ~q}}?
+
+;pc29                 Da' erro     
+;clearkb 
+;thresh(1) {thresh(1){p,q},thresh(1){~p, ~q}}?
+
+;pc30
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: thresh(1){~p => p, p}?
+Warning: Bad punctuation in termSequence at "=> p, p}?
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+;pc31
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: thresh(1) {(q => p) and (~q => p), p}?
+Warning: Bad punctuation in termSequence at "and (~q => p), p}?
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+;pc32
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: thresh(1) {(p => q) and (p => ~q), ~p}?
+Warning: Bad punctuation in termSequence at "and (p => ~q), ~p}?
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/theorems.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

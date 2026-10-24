@@ -1,0 +1,126 @@
+* 
+
+File $DEMO/defaults/birds.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ; This demo works only with Maria Cravo's implementation of default rules:
+;
+(resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+;
+(define mem class)
+
+(mem class)
+
+ CPU time : #.## 
+
+* 
+;
+; Normally birds fly
+(assert deflt $x ant(build class bird mem *x) cq(build class flies mem *x))
+SNePS ERROR: deflt is not a relation
+Occurred in module relationset-evaluator in function rseval
+
+
+ CPU time : #.## 
+
+* 
+;
+; Penguins and ostriches are exceptions to the default rule M1.
+(assert forall $x
+	ant((build class penguin mem *x) (build class ostrich mem *x))
+	cq(build min 0 max 0 arg(build applicable m1 darg1 *x)))
+SNePS ERROR: applicable is not a relation
+Occurred in module relationset-evaluator in function rseval
+
+
+ CPU time : #.## 
+
+* 
+;
+; Oscar is a bird.
+(assert mem oscar class bird)
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+; Tweety is a bird
+(assert mem tweety class bird)
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+;
+; Who flies?
+(describe (deduce mem $who class flies))
+
+
+ CPU time : #.## 
+
+* 
+;
+(belief-spaces)
+SNePS ERROR: Invalid top SNePSUL form: (belief-spaces)
+Occurred in module top-evaluator in function topsneval
+
+
+ CPU time : #.## 
+
+* 
+;
+; Tweety is either a penguin or an ostrich.
+(assert min 1 max 1 arg((build mem tweety class penguin)(build mem tweety class ostrich)))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+;
+; Who flies?
+(describe (deduce mem $who class flies))
+
+
+ CPU time : #.## 
+
+* 
+;
+(belief-spaces)
+SNePS ERROR: Invalid top SNePSUL form: (belief-spaces)
+Occurred in module top-evaluator in function topsneval
+
+
+ CPU time : #.## 
+
+* 
+(consequence m3 m8)
+SNePS ERROR: Invalid top SNePSUL form: (consequence m3 m8)
+Occurred in module top-evaluator in function topsneval
+
+
+ CPU time : #.## 
+
+*  
+
+End of $DEMO/defaults/birds.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

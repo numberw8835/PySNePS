@@ -1,0 +1,214 @@
+: 
+
+File $DEMO/snepslog/uvbr.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Demonstration of UBVR in action in SNePS-2
+;;; from Appendix of
+;;; S. C. Shapiro,
+;;;         Symmetric Relations, Intensional Individuals, and Variable Binding
+;;;         Proc. IEEE 74, 10(Oct. 1986), 1354-1363
+;;;
+;;; Start with an empty network
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+;;;
+;;; Example 1: If x and y are brothers, then x likes y.
+;;;
+Brothers({Bob, Joe, Harry}).
+
+  wff1!:  brothers({harry,joe,bob})    
+
+ CPU time : #.## 
+
+: all(b1,b2)(Brothers({b1,b2}) => Likes(b1,b2)).
+
+  wff2!:  all(b2,b1)(brothers({b2,b1}) => likes(b1,b2))    
+
+ CPU time : #.## 
+
+: Likes(?b1,?b2)?
+
+  wff11!:  likes(joe,bob)    
+  wff10!:  likes(harry,bob)    
+  wff9!:  likes(bob,joe)    
+  wff8!:  likes(harry,joe)    
+  wff7!:  likes(bob,harry)    
+  wff6!:  likes(joe,harry)    
+
+ CPU time : #.## 
+
+: ;;;
+;;; Example 2: If a tract of the CNS is malfunctioning, adjacent
+;;; tracts should be examined. 
+;;;
+all(tract1)({Tract(tract1), Malfunctioning(tract1)}
+	   &=> (all(tract2)({Tract(tract2), Adjacent({tract1,tract2})}
+			    &=> {Should-Examine(tract2)}))).
+
+  wff12!:  all(tract1)({malfunctioning(tract1),tract(tract1)} &=> {all(tract2)({adjacent({tract2,tract1}),tract(tract2)} &=> {should-examine(tract2)})})    
+
+ CPU time : #.## 
+
+: Tract(16R).
+
+  wff13!:  tract(16r)    
+
+ CPU time : #.## 
+
+: Tract(13RC8-C2).
+
+  wff14!:  tract(13rc8-c2)    
+
+ CPU time : #.## 
+
+: Adjacent({16R,13RC8-C2}).
+
+  wff15!:  adjacent({13rc8-c2,16r})    
+
+ CPU time : #.## 
+
+: Malfunctioning(16R).
+
+  wff16!:  malfunctioning(16r)    
+
+ CPU time : #.## 
+
+: Should-Examine(?tract)?
+
+  wff18!:  should-examine(13rc8-c2)    
+
+ CPU time : #.## 
+
+: ;;;
+;;; Example 3: If an AND gate has high inputs and a low output, it is faulty.
+;;; 
+all(ag,i,i2,o)({And-Gate(ag),Gate(ag,{i,i2},o)}
+	       &=> ({High(i),High(i2),Low(o)}
+	           &=> {Faulty(ag)})).
+
+  wff19!:  all(o,i2,i,ag)({gate(ag,{i2,i},o),and-gate(ag)} &=> {{low(o),high(i2),high(i)} &=> {faulty(ag)}})    
+
+ CPU time : #.## 
+
+: And-Gate(A1).
+
+  wff20!:  and-gate(a1)    
+
+ CPU time : #.## 
+
+: Gate(A1,{A1inp1,A1inp2},A1outp).
+
+  wff21!:  gate(a1,{a1inp2,a1inp1},a1outp)    
+
+ CPU time : #.## 
+
+: High(A1inp1).
+
+  wff22!:  high(a1inp1)    
+
+ CPU time : #.## 
+
+: Low(A1inp2).
+
+  wff23!:  low(a1inp2)    
+
+ CPU time : #.## 
+
+: Low(A1outp).
+
+  wff24!:  low(a1outp)    
+
+ CPU time : #.## 
+
+: And-Gate(A2).
+
+  wff25!:  and-gate(a2)    
+
+ CPU time : #.## 
+
+: Gate(A2,{A2inp1,A2inp2},A2outp).
+
+  wff26!:  gate(a2,{a2inp2,a2inp1},a2outp)    
+
+ CPU time : #.## 
+
+: High(A2inp1).
+
+  wff27!:  high(a2inp1)    
+
+ CPU time : #.## 
+
+: High(A2inp2).
+
+  wff28!:  high(a2inp2)    
+
+ CPU time : #.## 
+
+: Low(A2outp).
+
+  wff29!:  low(a2outp)    
+
+ CPU time : #.## 
+
+: Faulty(?g)?
+
+  wff33!:  faulty(a2)    
+
+ CPU time : #.## 
+
+: ;;;
+;;; Example 4: Elephants hate each other.
+;;; 
+Elephant(Clyde).
+
+  wff36!:  elephant(clyde)    
+
+ CPU time : #.## 
+
+: Elephant(Jumbo).
+
+  wff37!:  elephant(jumbo)    
+
+ CPU time : #.## 
+
+: all(e1,e2)({Elephant(e1), Elephant(e2)} &=> {Hates(e1,e2)}).
+
+  wff38!:  all(e2,e1)({elephant(e2),elephant(e1)} &=> {hates(e1,e2)})    
+
+ CPU time : #.## 
+
+: Hates(?e1,?e2)?
+
+  wff40!:  hates(clyde,jumbo)    
+  wff39!:  hates(jumbo,clyde)    
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/uvbr.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

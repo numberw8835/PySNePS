@@ -1,0 +1,707 @@
+: 
+
+File $DEMO/snepslog/chap4.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Demo of the Material in Chapter 4 of the SNePS 2.4 User's Manual
+;;; using SNePSLOG Mode 3 and the SNePSLOG perform command
+;;; Stuart C. Shapiro
+;;; May 21, 1998
+set-mode-3
+
+Net reset
+In SNePSLOG Mode 3.
+Use define-frame <pred> <list-of-arc-labels>.
+
+achieve(x1) will be represented by {<action, achieve>, <object1, x1>}
+actplan(x1,x2) will be represented by {<act, x1>, <plan, x2>}
+believe(x1) will be represented by {<action, believe>, <object1, x1>}
+disbelieve(x1) will be represented by {<action, disbelieve>, <object1, x1>}
+adopt(x1) will be represented by {<action, adopt>, <object1, x1>}
+unadopt(x1) will be represented by {<action, unadopt>, <object1, x1>}
+do-all(x1) will be represented by {<action, do-all>, <object1, x1>}
+do-one(x1) will be represented by {<action, do-one>, <object1, x1>}
+effect(x1,x2) will be represented by {<act, x1>, <effect, x2>}
+else(x1) will be represented by {<else, x1>}
+goalplan(x1,x2) will be represented by {<goal, x1>, <plan, x2>}
+if(x1,x2) will be represented by {<condition, x1>, <then, x2>}
+ifdo(x1,x2) will be represented by {<if, x1>, <do, x2>}
+precondition(x1,x2) will be represented by {<act, x1>, <precondition, x2>}
+snif(x1) will be represented by {<action, snif>, <object1, x1>}
+sniterate(x1) will be represented by {<action, sniterate>, <object1, x1>}
+snsequence(x1,x2) will be represented by {<action, snsequence>, <object1, x1>, <object2, x2>}
+whendo(x1,x2) will be represented by {<when, x1>, <do, x2>}
+wheneverdo(x1,x2) will be represented by {<whenever, x1>, <do, x2>}
+withall(x1,x2,x3,x4) will be represented by {<action, withall>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+withsome(x1,x2,x3,x4) will be represented by {<action, withsome>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+
+
+ CPU time : #.## 
+
+: ;;; Setting Mode 3 clears the knowledge base, undefines frames except
+;;; for the default frames, and unattaches primitive actions from nodes.
+define-frame say (action object1 object2)
+say(x1,x2) will be represented by {<action, say>, <object1, x1>, <object2, x2>}
+
+
+ CPU time : #.## 
+
+: define-frame Is (state agent location)
+is(x1,x2) will be represented by {<state, is>, <agent, x1>, <location, x2>}
+
+
+ CPU time : #.## 
+
+: ^^
+^^> net.infertrace = None
+^^> net.plantrace_mode = None
+^^> 
+^^> @primaction
+... def say(object1, object2):
+...     "Print the argument nodes in order."
+...     fresh_line()
+...     print(object1[0].value, object2[0].value)
+... 
+^^> attach_primaction("say", say)
+^^> attach_primaction("disbelieve")
+^^> ^^
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Section 4.1, Acting
+;;;
+perform say("Hello", "there")
+Hello there
+
+
+ CPU time : #.## 
+
+: wheneverdo(Is(Stu, here), say("Hello", "Stu")).
+
+  wff4!:  wheneverdo(is(stu,here),say(Hello,Stu))    
+
+ CPU time : #.## 
+
+: whendo(Is(Stu, here), say("I see", "you're here")).
+
+  wff6!:  whendo(is(stu,here),say(|I see|,|you're here|))    
+
+ CPU time : #.## 
+
+: Is(Stu, here)!
+Hello Stu
+I see you're here
+
+
+ CPU time : #.## 
+
+: perform disbelieve(Is(Stu, here))
+
+
+ CPU time : #.## 
+
+: Is(Stu, here)!
+Hello Stu
+
+
+ CPU time : #.## 
+
+: ifdo(Is(who, here), say("Who's", "here?")).
+
+  wff10!:  ifdo(is(who,here),say(|Who's|,here?))    
+
+ CPU time : #.## 
+
+: Is(who, here)?
+Who's here?
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Section 4.2, Primitive Acts
+;;;
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: ;;; Clearing the knowledge base unattaches primitive actions, but
+;;; leaves defined frames alone
+^^
+^^> attach_primaction("believe")
+^^> attach_primaction("disbelieve")
+^^> ^^
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Functions for Mental acts
+;;;
+~Is(Stu, here).
+
+  wff2!:  ~is(stu,here)    
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+  wff2!:  ~is(stu,here)    
+
+ CPU time : #.## 
+
+: perform believe(Is(Stu, here))
+
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+  wff1!:  is(stu,here)    
+
+ CPU time : #.## 
+
+: perform disbelieve(Is(Stu, here))
+
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Functions for Control acts
+;;;
+^^
+^^> for action in ("do-all", "do-one", "snsequence", "snif", "sniterate", "withall", "withsome"):
+...     attach_primaction(action)
+... 
+^^> attach_primaction("say", say)
+^^> ^^
+
+
+ CPU time : #.## 
+
+: perform do-all({say("Hello", "Bill"), say("Hello", "Stu")})
+Hello Bill
+Hello Stu
+
+
+ CPU time : #.## 
+
+: perform do-one({say("Hello", "Bill"), say("Hello", "Stu")})
+Hello Stu
+
+
+ CPU time : #.## 
+
+: ;;; In SNePSLOG Mode 3, snsequence always takes two acts as arguments.
+perform snsequence(say("Hello", "Bill"),
+		      snsequence(say("Hello","Stu"), 
+				    say("Hello","Oscar")))
+Hello Bill
+Hello Stu
+Hello Oscar
+
+
+ CPU time : #.## 
+
+: Is("Stu", here).
+
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: perform snif({if(Is("Bill", here), say("Hello", "Bill")),
+		if(Is("Stu", here), say("Hello", "Stu")),
+		else(say("No one's", "here!"))})
+Hello Stu
+
+
+ CPU time : #.## 
+
+: perform disbelieve(Is("Stu", here))
+
+
+ CPU time : #.## 
+
+: perform snif({if(Is("Bill", here), say("Hello", "Bill")),
+		if(Is("Stu", here), say("Hello", "Stu")),
+		else(say("No one's", "here!"))})
+No one's here!
+
+
+ CPU time : #.## 
+
+: Is("Bill", here).
+
+  wff13!:  is(Bill,here)    
+
+ CPU time : #.## 
+
+: Is("Stu", here).
+
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+  wff13!:  is(Bill,here)    
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: perform sniterate({if(Is("Bill", here),
+			snsequence(say("Hello", "Bill"), 
+				      disbelieve(Is("Bill", here)))),
+		     if(Is("Stu", here),
+			  snsequence(say("Hello", "Stu"), 
+					disbelieve(Is("Stu", here)))),
+		     else(say("That's", "all"))})
+Hello Stu
+Hello Bill
+That's all
+
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+
+ CPU time : #.## 
+
+: perform withall(?x, Is(?x, here), say("hello", ?x), say("No one's", "here"))
+No one's here
+
+
+ CPU time : #.## 
+
+: Is("Stu", here).
+
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: Is("Bill", here).
+
+  wff13!:  is(Bill,here)    
+
+ CPU time : #.## 
+
+: perform withall(?x, Is(?x, here), say("hello", ?x), say("No one's", "here"))
+hello Bill
+hello Stu
+
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+  wff13!:  is(Bill,here)    
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: perform withsome(?x, Is(?x, here), say("hello", ?x), say("No one's", "here"))
+hello Stu
+
+
+ CPU time : #.## 
+
+: perform disbelieve(Is("Stu", here))
+
+
+ CPU time : #.## 
+
+: perform disbelieve(Is("Bill", here))
+
+
+ CPU time : #.## 
+
+: perform withsome(?x, Is(?x, here), say("hello", ?x), say("No one's", "here"))
+No one's here
+
+
+ CPU time : #.## 
+
+: define-frame Person (class member)
+person(x1) will be represented by {<class, person>, <member, x1>}
+
+
+ CPU time : #.## 
+
+: Person({"Stu", "Bill"}).
+
+  wff42!:  person({Stu,Bill})    
+
+ CPU time : #.## 
+
+: Is("Stu", here).
+
+  wff12!:  is(Stu,here)    
+
+ CPU time : #.## 
+
+: all(p)(Person(p) => whendo(Is(p, here), say("Hello new", p))).
+
+  wff43!:  all(p)(person(p) => whendo(is(p,here),say(|Hello new|,p)))    
+
+ CPU time : #.## 
+
+: perform withall(?x, (Person(?x) and Is(?x, here)),
+		    say("Hello old", ?x), say("No one's", "here"))
+Hello old Stu
+
+
+ CPU time : #.## 
+
+: clear-infer
+
+
+ CPU time : #.## 
+
+: Is("Bill", here)!
+Hello new Bill
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Section 4.3, Associating Primitive Action Nodes with Their Functions
+;;;
+;;; This Section shows three different representation schemes for
+;;; primitive actions.  Two of these are particularly useful when
+;;; using a Natural Language interface, and cannot be created using
+;;; the SNePSLOG interface.
+;;;
+;;; Section 4.4, Complex Acts
+;;;
+;;; Start again.
+;;; With a non-NIL optional argument, no feedback is given.
+set-mode-3 t
+
+Net reset
+
+
+ CPU time : #.## 
+
+: define-frame say (action object1)
+
+
+ CPU time : #.## 
+
+: define-frame greet (action object1)
+
+
+ CPU time : #.## 
+
+: define-frame Person (class member)
+
+
+ CPU time : #.## 
+
+: ^^
+^^> @primaction
+... def say(object1):
+...     "Print the object."
+...     fresh_line()
+...     print(object1[0].value, end="")
+... 
+^^> attach_primaction("say", say)
+^^> attach_primaction("snsequence")
+^^> ^^
+
+
+ CPU time : #.## 
+
+: all(p)(Person(p)
+	     => ActPlan(greet(p),
+			  snsequence(sayHi, say(p)))).
+
+  wff1!:  all(p)(person(p) => actplan(greet(p),snsequence(sayhi,say(p))))    
+
+ CPU time : #.## 
+
+: Person({Stu, Bill}).
+
+  wff2!:  person({bill,stu})    
+
+ CPU time : #.## 
+
+: ActPlan(sayHi, say("Hello")).
+
+  wff4!:  actplan(sayhi,say(Hello))    
+
+ CPU time : #.## 
+
+: ActPlan(sayHi, say("Hi")).
+
+  wff6!:  actplan(sayhi,say(Hi))    
+
+ CPU time : #.## 
+
+: ActPlan(sayHi, say("Hiya")).
+
+  wff8!:  actplan(sayhi,say(Hiya))    
+
+ CPU time : #.## 
+
+: perform greet(Stu)
+
+WARNING: *** The node sayhi is being activated as an act, but it doesn't look like an act to sneps:is-act.n. ***
+Hiya
+stu
+
+
+ CPU time : #.## 
+
+: perform greet(Bill)
+
+WARNING: *** The node sayhi is being activated as an act, but it doesn't look like an act to sneps:is-act.n. ***
+Hiya
+bill
+
+
+ CPU time : #.## 
+
+: ActPlan(ask, say("Who's there?")).
+
+  wff25!:  actplan(ask,say(|Who's there?|))    
+
+ CPU time : #.## 
+
+: perform ask
+
+WARNING: *** The node ask is being activated as an act, but it doesn't look like an act to sneps:is-act.n. ***
+Who's there?
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Section 4.5, Goals
+;;;
+define-frame Is (state agent location)
+
+
+ CPU time : #.## 
+
+: define-frame call (action object1)
+
+
+ CPU time : #.## 
+
+: ^^
+^^> attach_primaction("achieve")
+^^> ^^
+
+
+ CPU time : #.## 
+
+: all(p)(Person(p) => GoalPlan(Is(p, here), call(p))).
+
+  wff27!:  all(p)(person(p) => goalplan(is(p,here),call(p)))    
+
+ CPU time : #.## 
+
+: all(p)(Person(p) => ActPlan(call(p), snsequence(say("Come here"), say(p)))).
+
+  wff29!:  all(p)(person(p) => actplan(call(p),snsequence(say(|Come here|),say(p))))    
+
+ CPU time : #.## 
+
+: perform achieve(Is(Bill, here))
+Come here
+bill
+
+
+ CPU time : #.## 
+
+: ;;;
+;;; Section 4.6, The Execution Cycle:  Preconditions and Effects
+;;;
+^^
+^^> net.plantrace_mode = "surface"
+^^> ^^
+
+
+ CPU time : #.## 
+
+: all(p)(Person(p) => Precondition(greet(p), Is(p, here))).
+
+  wff40!:  all(p)(person(p) => precondition(greet(p),is(p,here)))    
+
+ CPU time : #.## 
+
+: Is(Stu, here).
+
+  wff41!:  is(stu,here)    
+
+ CPU time : #.## 
+
+: perform greet(Stu)
+
+about to do   wff9:   greet(stu)    
+
+i wonder if the act   wff9:   greet(stu)    
+
+has any preconditions...
+
+the act   wff9:   greet(stu)    
+
+has a precondition:  wff42!:  precondition(greet(stu),is(stu,here))    
+
+it is satisfied.
+
+the act   wff9:   greet(stu)    
+
+has a plan:  wff12!:  actplan(greet(stu),snsequence(sayhi,say(stu)))    
+
+Intending to do  wff15:   do-one(snsequence(sayhi,say(stu)))    
+
+Now doing: DO-ONE   wff11:   snsequence(sayhi,say(stu))    
+
+Chose to do the act   wff11:   snsequence(sayhi,say(stu))    
+
+WARNING: *** The node sayhi is being activated as an act, but it doesn't look like an act to sneps:is-act.n. ***
+
+about to do   sayhi:   sayhi    
+
+i wonder if the act   sayhi:   sayhi    
+
+has any preconditions...
+
+the act   sayhi:   sayhi    
+
+has no preconditions:
+
+the act   sayhi:   sayhi    
+
+has the following plans:  wff8!:  actplan(sayhi,say(Hiya))    
+  wff6!:  actplan(sayhi,say(Hi))    
+  wff4!:  actplan(sayhi,say(Hello))    
+
+Intending to do  wff16:   do-one({say(Hiya),say(Hi),say(Hello)})    
+
+Now doing: DO-ONE   wff7:   say(Hiya)    
+  wff5:   say(Hi)    
+  wff3:   say(Hello)    
+
+Chose to do the act   wff7:   say(Hiya)    
+
+about to do   wff7:   say(Hiya)    
+
+i wonder if the act   wff7:   say(Hiya)    
+
+has any preconditions...
+
+the act   wff7:   say(Hiya)    
+
+has no preconditions:
+Hiya
+
+about to do   wff10:   say(stu)    
+
+i wonder if the act   wff10:   say(stu)    
+
+has any preconditions...
+
+the act   wff10:   say(stu)    
+
+has no preconditions:
+stu
+
+
+ CPU time : #.## 
+
+: all(p)(Person(p) => Effect(call(p), Is(p, here))).
+
+  wff44!:  all(p)(person(p) => effect(call(p),is(p,here)))    
+
+ CPU time : #.## 
+
+: perform call(Bill)
+
+about to do   wff32:   call(bill)    
+
+i wonder if the act   wff32:   call(bill)    
+
+has any preconditions...
+
+the act   wff32:   call(bill)    
+
+has no preconditions:
+
+the act   wff32:   call(bill)    
+
+has a plan:  wff37!:  actplan(call(bill),snsequence(say(|Come here|),say(bill)))    
+
+Intending to do  wff39:   do-one(snsequence(say(|Come here|),say(bill)))    
+
+Now doing: DO-ONE   wff36:   snsequence(say(|Come here|),say(bill))    
+
+Chose to do the act   wff36:   snsequence(say(|Come here|),say(bill))    
+
+about to do   wff28:   say(|Come here|)    
+
+i wonder if the act   wff28:   say(|Come here|)    
+
+has any preconditions...
+
+the act   wff28:   say(|Come here|)    
+
+has no preconditions:
+Come here
+
+about to do   wff18:   say(bill)    
+
+i wonder if the act   wff18:   say(bill)    
+
+has any preconditions...
+
+the act   wff18:   say(bill)    
+
+has no preconditions:
+bill
+
+Now doing: DO-ALL   wff47:   believe(is(bill,here))    
+
+Believe   wff30!:  is(bill,here)    
+
+
+ CPU time : #.## 
+
+: Is(?who, here)?
+
+  wff41!:  is(stu,here)    
+  wff30!:  is(bill,here)    
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/chap4.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

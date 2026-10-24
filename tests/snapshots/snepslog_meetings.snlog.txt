@@ -1,0 +1,263 @@
+: 
+
+File $DEMO/snepslog/meetings.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Automatic Belief Revision
+;;;    Based on an Explicit Object-Language Ordering Predicate.
+;;; From Section 4.3.1 of
+;;; Ari I. Fogel, On the Use of Epistemic Ordering Functions as Decision
+;;; Criteria for Automated and Assisted Belief Revision in SNePS, MS Thesis,
+;;; Department of Computer Science and Engineering, University at Buffalo,
+;;; Buffalo, NY, June 1, 2011. 
+;;; Based on
+;;; Maria R. Cravo and João P. Martins, "SNePSwD: A Newcomer to the
+;;;    SNePS Family", Journal of Experimental and Theoretical Artificial
+;;;    Intelligence 5, 1993, 135-148.
+
+;;; Use mode 1
+set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+;;; Show supports
+expert
+
+
+ CPU time : #.## 
+
+: 
+;;; Always use automatic belief revision
+br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: 
+;;; Use an explicit object-language epistemic entrenchment order
+;;;    based on IsLessEntrenched(p1, p2)
+set-order explicit
+IsLessEntrenched(p1,p2) will mean that p1 is strictly less entrenched than p2.
+
+
+ CPU time : #.## 
+
+: 
+;;; Consult the user when an entrenchment tie needs to be broken.
+br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: 
+;;; The epistemic entrenchment ordering is transitive.
+all(x,y,z)({IsLessEntrenched(x,y), IsLessEntrenched(y,z)} &=> IsLessEntrenched(x,z)).
+
+  wff1!:  all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; There are four kinds of meetings: official meetings, classes, work meetngs,
+;;; and social meetings.  Any meeting will be of exactly one of these types.
+all(m)(meeting(m) => xor{official(m), class(m), work(m), social(m)}).
+
+  wff2!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Any meeting will be either in the morning or the afternoon, but not both.
+all(m)(meeting(m) => xor{in(m,morning), in(m,afternoon)}).
+
+  wff3!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff3}>}  
+
+ CPU time : #.## 
+
+: 
+;;; If one person attends two different meetings, then one of the meetings has
+;;; to be in the morning, and the other in the afternoon.
+all(m1,m2,p)({attends(m1,p), attends(m2,p)} &=>
+		     (in(m1,morning) <=> in(m2,afternoon))).
+
+  wff4!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff4}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Philip, Peter, and John will attend work meetings.
+all(m)(work(m) => {attends(m, Philip), attends(m, Peter), attends(m, John)}).
+
+  wff5!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff5}>}  
+
+ CPU time : #.## 
+
+: 
+;;; w is a work meeting
+and{meeting(w), work(w)}.
+
+  wff8!:  work(w) and meeting(w)  {<hyp,{wff8}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Peter prefers meetings in the morning.
+all(m)(attends(m,Peter) => in(m,morning)).
+
+  wff9!:  all(m)(attends(m,peter) => in(m,morning))  {<hyp,{wff9}>}  
+
+ CPU time : #.## 
+
+: 
+;;; John prefers meetings in the afternoon.
+all(m)(attends(m,John) => in(m,afternoon)).
+
+  wff10!:  all(m)(attends(m,john) => in(m,afternoon))  {<hyp,{wff10}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Philip prefers meetings in the morning.
+all(m)(attends(m,Philip) => in(m,morning)).
+
+  wff11!:  all(m)(attends(m,philip) => in(m,morning))  {<hyp,{wff11}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base so far:
+list-asserted-wffs
+  wff11!:  all(m)(attends(m,philip) => in(m,morning))  {<hyp,{wff11}>}  
+  wff10!:  all(m)(attends(m,john) => in(m,afternoon))  {<hyp,{wff10}>}  
+  wff9!:  all(m)(attends(m,peter) => in(m,morning))  {<hyp,{wff9}>}  
+  wff8!:  work(w) and meeting(w)  {<hyp,{wff8}>}  
+  wff5!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff5}>}  
+  wff4!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff4}>}  
+  wff3!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff3}>}  
+  wff2!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff2}>}  
+  wff1!:  all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Philip's preference is less important than John's.
+IsLessEntrenched(wff11, wff10).
+
+  wff12!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)(attends(m,john) => in(m,afternoon)))  {<hyp,{wff12}>}  
+
+ CPU time : #.## 
+
+: 
+;;; John's preference is less important than Peter's.
+IsLessEntrenched(wff10, wff9).
+
+  wff13!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)(attends(m,peter) => in(m,morning)))  {<hyp,{wff13}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Peter's preference is less important than any other information.
+IsLessEntrenched(wff9,{wff1, wff2, wff3, wff4, wff5, wff8 }).
+
+  wff14!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),{work(w) and meeting(w),all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)}),all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)}),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})),all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)})),all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})})  {<hyp,{wff14}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base so far:
+list-asserted-wffs
+  wff14!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),{work(w) and meeting(w),all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)}),all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)}),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})),all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)})),all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})})  {<hyp,{wff14}>}  
+  wff13!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)(attends(m,peter) => in(m,morning)))  {<hyp,{wff13}>}  
+  wff12!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)(attends(m,john) => in(m,afternoon)))  {<hyp,{wff12}>}  
+  wff11!:  all(m)(attends(m,philip) => in(m,morning))  {<hyp,{wff11}>}  
+  wff10!:  all(m)(attends(m,john) => in(m,afternoon))  {<hyp,{wff10}>}  
+  wff9!:  all(m)(attends(m,peter) => in(m,morning))  {<hyp,{wff9}>}  
+  wff8!:  work(w) and meeting(w)  {<hyp,{wff8}>}  
+  wff5!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff5}>}  
+  wff4!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff4}>}  
+  wff3!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff3}>}  
+  wff2!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff2}>}  
+  wff1!:  all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; When is the meeting?
+in(w,?when)?
+
+  wff44!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})))  {<der,{wff1,wff13,wff14}>}  
+  wff15!:  in(w,morning)  {<der,{wff5,wff8,wff11}>,<der,{wff5,wff8,wff9}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The revised knowledge base:
+list-asserted-wffs
+  wff73!:  ~official(w)  {<der,{wff2,wff8}>}  
+  wff72!:  ~social(w)  {<der,{wff2,wff8}>}  
+  wff71!:  ~class(w)  {<der,{wff2,wff8}>}  
+  wff70!:  xor{official(w),class(w),social(w),work(w)}  {<der,{wff2,wff8}>}  
+  wff66!:  ~(all(m)(attends(m,john) => in(m,afternoon)))  {<ext,{wff3,wff5,wff8,wff9}>}  
+  wff49!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)}))  {<der,{wff1,wff12,wff13,wff14}>}  
+  wff48!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)}))  {<der,{wff1,wff13,wff14}>}  
+  wff47!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)})))  {<der,{wff1,wff12,wff13,wff14}>}  
+  wff46!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)})))  {<der,{wff1,wff13,wff14}>}  
+  wff45!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})))  {<der,{wff1,wff12,wff13,wff14}>}  
+  wff44!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})))  {<der,{wff1,wff13,wff14}>}  
+  wff43!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)}))  {<der,{wff1,wff12,wff13,wff14}>}  
+  wff42!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)}))  {<der,{wff1,wff13,wff14}>}  
+  wff41!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)}))  {<der,{wff1,wff12,wff13,wff14}>}  
+  wff40!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)}))  {<der,{wff1,wff13,wff14}>}  
+  wff39!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),work(w) and meeting(w))  {<der,{wff1,wff12,wff13,wff14}>}  
+  wff38!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),work(w) and meeting(w))  {<der,{wff1,wff13,wff14}>}  
+  wff37!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)}))  {<der,{wff14}>}  
+  wff36!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)})))  {<der,{wff14}>}  
+  wff35!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})))  {<der,{wff14}>}  
+  wff34!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)}))  {<der,{wff14}>}  
+  wff33!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)}))  {<der,{wff14}>}  
+  wff32!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),work(w) and meeting(w))  {<der,{wff14}>}  
+  wff31!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)(attends(m,peter) => in(m,morning)))  {<der,{wff1,wff12,wff13}>}  
+  wff26!:  xor{in(w,afternoon),in(w,morning)}  {<der,{wff3,wff8}>}  
+  wff23!:  attends(w,philip)  {<der,{wff5,wff8}>}  
+  wff21!:  attends(w,john)  {<der,{wff5,wff8}>}  
+  wff19!:  attends(w,peter)  {<der,{wff5,wff8}>}  
+  wff18!:  ~in(w,afternoon)  {<der,{wff3,wff5,wff8,wff11}>,<der,{wff3,wff5,wff8,wff9}>}  
+  wff15!:  in(w,morning)  {<der,{wff5,wff8,wff11}>,<der,{wff5,wff8,wff9}>}  
+  wff14!:  islessentrenched(all(m)(attends(m,peter) => in(m,morning)),{work(w) and meeting(w),all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)}),all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)}),all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)})),all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)})),all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})})  {<hyp,{wff14}>}  
+  wff13!:  islessentrenched(all(m)(attends(m,john) => in(m,afternoon)),all(m)(attends(m,peter) => in(m,morning)))  {<hyp,{wff13}>}  
+  wff12!:  islessentrenched(all(m)(attends(m,philip) => in(m,morning)),all(m)(attends(m,john) => in(m,afternoon)))  {<hyp,{wff12}>}  
+  wff9!:  all(m)(attends(m,peter) => in(m,morning))  {<hyp,{wff9}>}  
+  wff8!:  work(w) and meeting(w)  {<hyp,{wff8}>}  
+  wff7!:  work(w)  {<der,{wff8}>}  
+  wff6!:  meeting(w)  {<der,{wff8}>}  
+  wff5!:  all(m)({work(m)} v=> {attends(m,john),attends(m,peter),attends(m,philip)})  {<hyp,{wff5}>}  
+  wff4!:  all(p,m2,m1)({attends(m2,p),attends(m1,p)} &=> {in(m2,afternoon) <=> in(m1,morning)})  {<hyp,{wff4}>}  
+  wff3!:  all(m)(meeting(m) => (xor{in(m,afternoon),in(m,morning)}))  {<hyp,{wff3}>}  
+  wff2!:  all(m)(meeting(m) => (xor{social(m),work(m),class(m),official(m)}))  {<hyp,{wff2}>}  
+  wff1!:  all(z,y,x)({islessentrenched(y,z),islessentrenched(x,y)} &=> {islessentrenched(x,z)})  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/meetings.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

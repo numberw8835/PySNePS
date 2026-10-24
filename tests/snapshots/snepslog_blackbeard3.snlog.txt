@@ -1,0 +1,133 @@
+: 
+
+File $DEMO/snepslog/blackbeard3.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Fully Automatic Nonprioritized Belief Revision
+;;; From Section 4.2.3 of
+;;; Ari I. Fogel, On the Use of Epistemic Ordering Functions as Decision
+;;; Criteria for Automated and Assisted Belief Revision in SNePS, MS Thesis,
+;;; Department of Computer Science and Engineering, University at Buffalo,
+;;; Buffalo, NY, June 1, 2011. 
+
+;;; Use mode 1
+set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+;;; Show supports
+expert
+
+
+ CPU time : #.## 
+
+: 
+;;; Always use automatic belief revision
+br-mode auto
+Belief revision mode will now be set to 'auto'.
+
+
+ CPU time : #.## 
+
+: 
+;;; Use an entrenchment ordering where every proposition is minimally-entrenched.
+;;;                  (epistemic entrenchment ties are possible)
+;;;
+set-order null-order
+All propositions will be equally epistemically entrenched.
+
+
+ CPU time : #.## 
+
+: 
+;;; Automatically use the lexicographic ordering of wffNames
+;;;    to break epistemic entrenchment ties.
+br-tie-mode auto
+Entrenchment ties will now be broken automatically
+
+
+ CPU time : #.## 
+
+: 
+;;; All pirates are uneducated
+all(x)(Pirate(x) => ~Educated(x)).
+
+  wff1!:  all(x)(pirate(x) => (~educated(x)))  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; All criminals are uneducated
+all(x)(Criminal(x) => ~Educated(x)).
+
+  wff2!:  all(x)(criminal(x) => (~educated(x)))  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Blackbeard was a pirate and a criminal.
+and{Pirate(Blackbeard), Criminal(Blackbeard)}!
+
+  wff7!:  ~educated(blackbeard)  {<der,{wff2,wff5}>,<der,{wff1,wff5}>}  
+  wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+  wff4!:  criminal(blackbeard)  {<der,{wff5}>}  
+  wff3!:  pirate(blackbeard)  {<der,{wff5}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base thus far:
+list-asserted-wffs
+  wff7!:  ~educated(blackbeard)  {<der,{wff2,wff5}>,<der,{wff1,wff5}>}  
+  wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+  wff4!:  criminal(blackbeard)  {<der,{wff5}>}  
+  wff3!:  pirate(blackbeard)  {<der,{wff5}>}  
+  wff2!:  all(x)(criminal(x) => (~educated(x)))  {<hyp,{wff2}>}  
+  wff1!:  all(x)(pirate(x) => (~educated(x)))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Blackbeard was educated (a contradiction, handled automatically)
+Educated(Blackbeard).
+
+  wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base now.
+;;; The two no-goods are {wft1, wft5, wft6} and {wft2, wft5, wft6}.
+;;; wft1 is the lexicographic lowest of the first group,
+;;;    and wft2 is the lexicographic lowest of the second group,
+;;; so they were removed.
+list-asserted-wffs
+  wff9!:  ~(all(x)(criminal(x) => (~educated(x))))  {<ext,{wff5,wff6}>}  
+  wff8!:  ~(all(x)(pirate(x) => (~educated(x))))  {<ext,{wff5,wff6}>}  
+  wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+  wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+  wff4!:  criminal(blackbeard)  {<der,{wff5}>}  
+  wff3!:  pirate(blackbeard)  {<der,{wff5}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/blackbeard3.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

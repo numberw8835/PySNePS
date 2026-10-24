@@ -1,0 +1,185 @@
+: 
+
+File $DEMO/snepslog/blackbeard1.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Assisted Nonprioritized Belief Revision with Manual tie-breaking
+;;; From Section 4.2.1 of
+;;; Ari I. Fogel, On the Use of Epistemic Ordering Functions as Decision
+;;; Criteria for Automated and Assisted Belief Revision in SNePS, MS Thesis,
+;;; Department of Computer Science and Engineering, University at Buffalo,
+;;; Buffalo, NY, June 1, 2011. 
+
+;;; Use mode 1
+set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+;;; Show supports
+expert
+
+
+ CPU time : #.## 
+
+: 
+;;; Use the default belief revision mode of "manual".
+;;; This is the default for modes 1 and 2,
+;;;    and still allows the user to choose "auto" mode
+;;;       for each contradiction that occurs.
+br-mode
+Belief revision mode currently set to 'manual'
+
+
+ CPU time : #.## 
+
+: 
+;;; Use an entrenchment ordering where every proposition is minimally-entrenched.
+;;;                  (epistemic ties are possible)
+;;;
+set-order null-order
+All propositions will be equally epistemically entrenched.
+
+
+ CPU time : #.## 
+
+: 
+;;; Consult the user when an entrenchment tie occurs.
+br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: 
+;;; All pirates are uneducated
+all(x)(Pirate(x) => ~Educated(x)).
+
+  wff1!:  all(x)(pirate(x) => (~educated(x)))  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; All criminals are uneducated
+all(x)(Criminal(x) => ~Educated(x)).
+
+  wff2!:  all(x)(criminal(x) => (~educated(x)))  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; Blackbeard was a pirate and a criminal.
+and{Pirate(Blackbeard), Criminal(Blackbeard)}!
+
+  wff7!:  ~educated(blackbeard)  {<der,{wff2,wff5}>,<der,{wff1,wff5}>}  
+  wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+  wff4!:  criminal(blackbeard)  {<der,{wff5}>}  
+  wff3!:  pirate(blackbeard)  {<der,{wff5}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base thus far:
+list-asserted-wffs
+  wff7!:  ~educated(blackbeard)  {<der,{wff2,wff5}>,<der,{wff1,wff5}>}  
+  wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+  wff4!:  criminal(blackbeard)  {<der,{wff5}>}  
+  wff3!:  pirate(blackbeard)  {<der,{wff5}>}  
+  wff2!:  all(x)(criminal(x) => (~educated(x)))  {<hyp,{wff2}>}  
+  wff1!:  all(x)(pirate(x) => (~educated(x)))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Blackbeard was educated (a contradiction)
+Educated(Blackbeard).
+
+
+ A contradiction was detected within context default-defaultct.
+ The contradiction involves the proposition you want to assert:
+     wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+ 
+ and the previously existing proposition:
+     wff7!:  ~educated(blackbeard)  {<der,{wff2,wff5}>,<der,{wff1,wff5}>}  
+
+
+
+ You have the following options:
+  1. [a] to attempt to resolve the contradiction automatically 
+  2. [c] to continue anyway, knowing that a contradiction is derivable;
+  3. [r] to revise the inconsistent part of the context manually
+  4. [d] to discard this contradictory new assertion from the context
+ (please type a, c, r or d)
+=><= 
+;;; Choose automatic belief revision for this problem.
+a
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff2!:  all(x)(criminal(x) => (~educated(x)))  {<hyp,{wff2}>}  
+          (2 supported propositions: (wff7 wff2) )
+
+ 2 :   wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+          (4 supported propositions: (wff7 wff5 wff4 wff3) )
+
+ 3 :   wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+          (1 supported proposition: (wff6) )
+
+
+=><= 
+;;; Among these, I least like the proposition that all criminals are not educated.
+1
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff1!:  all(x)(pirate(x) => (~educated(x)))  {<hyp,{wff1}>}  
+          (2 supported propositions: (wff7 wff1) )
+
+ 2 :   wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+          (4 supported propositions: (wff7 wff5 wff4 wff3) )
+
+ 3 :   wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+          (1 supported proposition: (wff6) )
+
+
+=><= 
+;;; Among these, I least like the proposition that all pirates are not educated.
+1
+
+  wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base now.
+list-asserted-wffs
+  wff9!:  ~(all(x)(criminal(x) => (~educated(x))))  {<ext,{wff5,wff6}>}  
+  wff8!:  ~(all(x)(pirate(x) => (~educated(x))))  {<ext,{wff5,wff6}>}  
+  wff6!:  educated(blackbeard)  {<hyp,{wff6}>}  
+  wff5!:  criminal(blackbeard) and pirate(blackbeard)  {<hyp,{wff5}>}  
+  wff4!:  criminal(blackbeard)  {<der,{wff5}>}  
+  wff3!:  pirate(blackbeard)  {<der,{wff5}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/blackbeard1.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

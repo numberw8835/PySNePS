@@ -1,0 +1,300 @@
+* 
+
+File $DEMO/sneps/numquant/jobspuzzle.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;;;
+;;; THE JOBS PUZZLE
+;;; A SNePS Exercise demonstrating non-standard connectives and quantifiers
+;;; by Stuart C. Shapiro
+;;; based on
+;;; The Jobs Puzzle in Full, Chapter 3.2
+;;; of Automated Reasoning: Introduction and Applications
+;;; by Larry Wos, Ross Overbeek, Ewing Lusk, and Jim Boyle
+;;; Prentice-Hall, Englewood Cliffs, NJ, 1984, pp. 55-58.
+;;;
+;;; Most inputs below are preceded by a line labelled "jp:",
+;;;      which comes directly from the statement of the jobs puzzle,
+;;;      p. 55 of Wos et al.
+;;; and some lines labelled "inf", which are permissable immediate
+;;; inferences from the puzzle statement according to page 56 or
+;;; Chapter 3.2.1, "The Solution by Person or Persons Unknown"
+;;; of Wos et al.
+;;; and some lines labelled "scs:", which are my comments.
+;
+(resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+(define member class employee job)
+
+(member class employee job)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: There are four people: Roberta, Thelma, Steve, and Pete.
+(describe (assert member (Roberta Thelma Steve Pete)
+		  class person))
+(M1! (class person) (member pete steve thelma roberta))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: The jobs are: chef, guard, nurse, telephone operator, police
+;     officer (gender not implied), teacher, actor, and boxer.
+(describe (assert member (chef guard nurse telephone\ operator
+			  police\ officer teacher actor boxer)
+		  class job))
+(M2! (class job)
+ (member boxer actor teacher |police officer| |telephone operator| nurse guard
+  chef))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: Among [the people], they hold eight different jobs.
+; jp: Each holds exactly two jobs.
+(describe (assert forall $person
+		  ant (build member *person class person)
+		  cq (build pevb $job emin 2 emax 2 etot 8
+			    &ant (build member *job class job)
+			    cq (build employee *person job *job))))
+(M3! (forall V1) (ant (P1 (class person) (member V1)))
+ (cq
+  (P4 (pevb V2) (emin |2|) (emax |2|) (etot |8|)
+   (&ant (P2 (class job) (member V2))) (cq (P3 (employee V1) (job V2))))))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+;
+; inf: "No job is held by more than one person."
+(describe (assert forall *job
+		  ant (build member *job class job)
+		  cq (build pevb *person emin 1 emax 1 etot 4 
+			    &ant (build member *person class person)
+			    cq (build employee *person job *job))))
+(M4! (forall V2) (ant (P2 (class job) (member V2)))
+ (cq
+  (P5 (pevb V1) (emin |1|) (emax |1|) (etot |4|)
+   (&ant (P1 (class person) (member V1))) (cq (P3 (employee V1) (job V2))))))
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+;
+; inf: "if the four names did not clearly imply the sex of the people,
+; [the puzzle] would be impossible to solve."
+(describe (assert member (Roberta Thelma) class female))
+(M5! (class female) (member thelma roberta))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member (Steve Pete) class male))
+(M6! (class male) (member pete steve))
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: The job of nurse is held by a male.
+; inf: "everyday language distinguishes [actors and actresses] based
+;      on sex."
+; jp: The husband of the chef is the telephone operator.
+; inf: "the implicit fact that husbands are male"
+; scs: So neither the nurse, the actor, nor the telephone operator is
+;      a woman.
+(describe
+ (assert forall $woman
+	 ant (build member *woman class female)
+	 cq (build min 0 max 0
+		   arg ((build employee *woman job nurse)
+			(build employee *woman job actor)
+			(build employee *woman job telephone\ operator)))))
+(M7! (forall V3) (ant (P6 (class female) (member V3)))
+ (cq
+  (P10 (min |0|) (max |0|)
+   (arg (P9 (employee V3) (job |telephone operator|))
+    (P8 (employee V3) (job actor)) (P7 (employee V3) (job nurse))))))
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+;
+; inf: since the chef has a husband, she must be female.
+(describe (assert forall $man
+		  ant (build member *man class male)
+		  cq (build min 0 max 0
+			    arg (build employee *man job chef))))
+(M8! (forall V4) (ant (P11 (class male) (member V4)))
+ (cq (P13 (min |0|) (max |0|) (arg (P12 (employee V4) (job chef))))))
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: Roberta is not a boxer.
+(describe (assert min 0 max 0
+		  arg (build employee Roberta job boxer)))
+(M10! (min |0|) (max |0|) (arg (M9 (employee roberta) (job boxer))))
+
+(M10!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: Pete has no education past the ninth grade.
+; inf: "the jobs of nurse, police officer, and teacher each require
+;      more than a ninth-grade education."
+(describe (assert min 0 max 0
+		  arg ((build employee Pete job nurse)
+		       (build employee Pete job police\ officer)
+		       (build employee Pete job teacher))))
+(M14! (min |0|) (max |0|)
+ (arg (M13 (employee pete) (job teacher))
+  (M12 (employee pete) (job |police officer|))
+  (M11 (employee pete) (job nurse))))
+
+(M14!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: Roberta, the chef, and the police officer went golfing together.
+; inf: "Thus, we know that Roberta is neither the chef nor the police
+;      officer."
+(describe (assert min 0 max 0
+		  arg ((build employee Roberta job chef)
+		       (build employee Roberta job police\ officer))))
+(M17! (min |0|) (max |0|)
+ (arg (M16 (employee roberta) (job |police officer|))
+  (M15 (employee roberta) (job chef))))
+
+(M17!)
+
+ CPU time : #.## 
+
+* 
+;
+; inf: "Since they went golfing together, the chef and the police
+;      officer are not the same person."
+(describe
+ (assert forall *person
+	 ant (build member *person class person)
+	 cq (build min 0 max 1
+		   arg ((build employee *person job chef)
+			(build employee *person job police\ officer)))))
+(M18! (forall V1) (ant (P1 (class person) (member V1)))
+ (cq
+  (P16 (min |0|) (max |1|)
+   (arg (P15 (employee V1) (job |police officer|))
+    (P14 (employee V1) (job chef))))))
+
+(M18!)
+
+ CPU time : #.## 
+
+* 
+;
+; jp: Question: Who holds which jobs?
+; scs: Stop as soon as you find 8 positive answers.
+(describe (deduce (8 0) employee *person job *job))
+(M99! (min |0|) (max |0|) (arg (M98 (employee pete) (job guard))))
+(M97! (min |0|) (max |0|) (arg (M96 (employee pete) (job boxer))))
+(M95! (min |0|) (max |0|) (arg (M94 (employee pete) (job chef))))
+(M92! (employee pete) (job |telephone operator|))
+(M90! (employee pete) (job actor))
+(M89! (min |0|) (max |0|) (arg (M88 (employee steve) (job guard))))
+(M87! (min |0|) (max |0|) (arg (M86 (employee steve) (job teacher))))
+(M85! (min |0|) (max |0|) (arg (M84 (employee steve) (job boxer))))
+(M82! (employee steve) (job |police officer|))
+(M81! (min |0|) (max |0|) (arg (M80 (employee steve) (job chef))))
+(M79! (min |0|) (max |0|)
+ (arg (M78 (employee steve) (job |telephone operator|))))
+(M77! (min |0|) (max |0|) (arg (M76 (employee steve) (job actor))))
+(M74! (employee steve) (job nurse))
+(M73! (min |0|) (max |0|) (arg (M72 (employee thelma) (job guard))))
+(M71! (min |0|) (max |0|) (arg (M70 (employee thelma) (job teacher))))
+(M68! (employee thelma) (job boxer))
+(M67! (min |0|) (max |0|) (arg (M66 (employee thelma) (job |police officer|))))
+(M64! (employee thelma) (job chef))
+(M63! (min |0|) (max |0|)
+ (arg (M62 (employee thelma) (job |telephone operator|))))
+(M61! (min |0|) (max |0|) (arg (M60 (employee thelma) (job actor))))
+(M59! (min |0|) (max |0|) (arg (M58 (employee thelma) (job nurse))))
+(M56! (employee roberta) (job guard))
+(M54! (employee roberta) (job teacher))
+(M53! (min |0|) (max |0|)
+ (arg (M52 (employee roberta) (job |telephone operator|))))
+(M51! (min |0|) (max |0|) (arg (M50 (employee roberta) (job actor))))
+(M49! (min |0|) (max |0|) (arg (M48 (employee roberta) (job nurse))))
+(M23! (min |0|) (max |0|) (arg (M15 (employee roberta) (job chef))))
+(M22! (min |0|) (max |0|)
+ (arg (M16 (employee roberta) (job |police officer|))))
+(M21! (min |0|) (max |0|) (arg (M11 (employee pete) (job nurse))))
+(M20! (min |0|) (max |0|) (arg (M12 (employee pete) (job |police officer|))))
+(M19! (min |0|) (max |0|) (arg (M13 (employee pete) (job teacher))))
+(M10! (min |0|) (max |0|) (arg (M9 (employee roberta) (job boxer))))
+
+(M99! M97! M95! M92! M90! M89! M87! M85! M82! M81! M79! M77! M74! M73! M71!
+ M68! M67! M64! M63! M61! M59! M56! M54! M53! M51! M49! M23! M22! M21! M20!
+ M19! M10!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (findassert employee ?p job ?j))
+(M92! (employee pete) (job |telephone operator|))
+(M90! (employee pete) (job actor))
+(M82! (employee steve) (job |police officer|))
+(M74! (employee steve) (job nurse))
+(M68! (employee thelma) (job boxer))
+(M64! (employee thelma) (job chef))
+(M56! (employee roberta) (job guard))
+(M54! (employee roberta) (job teacher))
+
+(M92! M90! M82! M74! M68! M64! M56! M54!)
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/numquant/jobspuzzle.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

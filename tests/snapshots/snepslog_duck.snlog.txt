@@ -1,0 +1,206 @@
+: 
+
+File $DEMO/snepslog/duck.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Prioritized Belief Revision with Manual Tie-Breaking
+;;; From Section 4.2.4 of
+;;; Ari I. Fogel, On the Use of Epistemic Ordering Functions as Decision
+;;; Criteria for Automated and Assisted Belief Revision in SNePS, MS Thesis,
+;;; Department of Computer Science and Engineering, University at Buffalo,
+;;; Buffalo, NY, June 1, 2011. 
+
+;;; Use mode 3
+set-mode-3
+
+Net reset
+In SNePSLOG Mode 3.
+Use define-frame <pred> <list-of-arc-labels>.
+
+achieve(x1) will be represented by {<action, achieve>, <object1, x1>}
+actplan(x1,x2) will be represented by {<act, x1>, <plan, x2>}
+believe(x1) will be represented by {<action, believe>, <object1, x1>}
+disbelieve(x1) will be represented by {<action, disbelieve>, <object1, x1>}
+adopt(x1) will be represented by {<action, adopt>, <object1, x1>}
+unadopt(x1) will be represented by {<action, unadopt>, <object1, x1>}
+do-all(x1) will be represented by {<action, do-all>, <object1, x1>}
+do-one(x1) will be represented by {<action, do-one>, <object1, x1>}
+effect(x1,x2) will be represented by {<act, x1>, <effect, x2>}
+else(x1) will be represented by {<else, x1>}
+goalplan(x1,x2) will be represented by {<goal, x1>, <plan, x2>}
+if(x1,x2) will be represented by {<condition, x1>, <then, x2>}
+ifdo(x1,x2) will be represented by {<if, x1>, <do, x2>}
+precondition(x1,x2) will be represented by {<act, x1>, <precondition, x2>}
+snif(x1) will be represented by {<action, snif>, <object1, x1>}
+sniterate(x1) will be represented by {<action, sniterate>, <object1, x1>}
+snsequence(x1,x2) will be represented by {<action, snsequence>, <object1, x1>, <object2, x2>}
+whendo(x1,x2) will be represented by {<when, x1>, <do, x2>}
+wheneverdo(x1,x2) will be represented by {<whenever, x1>, <do, x2>}
+withall(x1,x2,x3,x4) will be represented by {<action, withall>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+withsome(x1,x2,x3,x4) will be represented by {<action, withsome>, <vars, x1>, <suchthat, x2>, <do, x3>, <else, x4>}
+
+
+ CPU time : #.## 
+
+: 
+;;; Show supports
+expert
+
+
+ CPU time : #.## 
+
+: 
+;;; Note that we will use the default belief revision mode of "auto",
+;;; which is the default for mode 3.
+br-mode
+Belief revision mode currently set to 'auto'
+
+
+ CPU time : #.## 
+
+: 
+;;; Use an entrenchment ordering
+;;;    where every proposition is equally entrenched.
+set-order null-order
+All propositions will be equally epistemically entrenched.
+
+
+ CPU time : #.## 
+
+: 
+;;; Consult the user when an entrenchment tie needs to be broken.
+br-tie-mode manual
+The user will be consulted when an entrenchment tie occurs.
+
+
+ CPU time : #.## 
+
+: 
+;;; Attach the believe action to the believe term.
+^ attach_primaction("believe")
+
+
+ CPU time : #.## 
+
+: 
+define-frame Walk(verb prep obj) "it walks [prep] a [obj]"
+walk(x1,x2) will be represented by {<verb, walk>, <prep, x1>, <obj, x2>}
+
+
+ CPU time : #.## 
+
+: define-frame Talk(verb prep obj) "it talks [prep] a [obj]"
+talk(x1,x2) will be represented by {<verb, talk>, <prep, x1>, <obj, x2>}
+
+
+ CPU time : #.## 
+
+: define-frame x(verb prep obj) "it xes [prep] a [obj]"
+x(x1,x2) will be represented by {<verb, x>, <prep, x1>, <obj, x2>}
+
+
+ CPU time : #.## 
+
+: define-frame Isa(verb obj) "It is a [obj]"
+isa(x1) will be represented by {<verb, isa>, <obj, x1>}
+
+
+ CPU time : #.## 
+
+: 
+;;; If it xes like a y, it is a y."
+all(x,y)(x(like,y) => Isa(y)).
+
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+ CPU time : #.## 
+
+: 
+;;; It walks like a duck.
+Walk(like, duck)!
+
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+
+ CPU time : #.## 
+
+: 
+;;; It talks like a duck.
+Talk(like, duck)!
+
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>,<der,{wff1,wff4}>}  
+
+ CPU time : #.## 
+
+: 
+;;; The knowledge base so far:
+list-asserted-wffs
+  wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+  wff3!:  isa(duck)  {<der,{wff1,wff2}>,<der,{wff1,wff4}>}  
+  wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+;;; Believe that it is not a duck, regardless of what you currently believe.
+perform believe(~Isa(duck))
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+          (2 supported propositions: (wff3 wff1) )
+
+ 2 :   wff2!:  walk(like,duck)  {<hyp,{wff2}>}  
+          (2 supported propositions: (wff3 wff2) )
+
+
+=><= 
+;;; So, it doesn't walk like a duck.
+2
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 :   wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+          (2 supported propositions: (wff3 wff1) )
+
+ 2 :   wff4!:  talk(like,duck)  {<hyp,{wff4}>}  
+          (2 supported propositions: (wff4 wff3) )
+
+
+=><= 
+;;; So, it doesn't talk like a duck.
+2
+
+
+ CPU time : #.## 
+
+: 
+;;; The revised knowledge base:
+list-asserted-wffs
+  wff8!:  ~walk(like,duck)  {<ext,{wff1,wff5}>}  
+  wff7!:  ~talk(like,duck)  {<ext,{wff1,wff5}>}  
+  wff5!:  ~isa(duck)  {<hyp,{wff5}>}  
+  wff1!:  all(y,x)(x(like,y) => isa(y))  {<hyp,{wff1}>}  
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/duck.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

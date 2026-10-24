@@ -1,0 +1,417 @@
+: 
+
+File $DEMO/snepslog/ruleintro.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;;; Various examples of rule introduction:
+;;;
+;;; And introduction:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+adult().
+
+  wff1!:  adult()    
+
+ CPU time : #.## 
+
+: robin().
+
+  wff2!:  robin()    
+
+ CPU time : #.## 
+
+: adult() and robin()?
+
+  wff3!:  robin() and adult()    
+
+ CPU time : #.## 
+
+: list-wffs
+  wff3!:  robin() and adult()    
+  wff2!:  robin()    
+  wff1!:  adult()    
+
+
+ CPU time : #.## 
+
+: ;;; Simple entailment introduction:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin() => bird().
+
+  wff3!:  robin() => bird()    
+
+ CPU time : #.## 
+
+: bird() => animal().
+
+  wff5!:  bird() => animal()    
+
+ CPU time : #.## 
+
+: robin() => animal()?
+
+  wff6!:  robin() => animal()    
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff6!:  robin() => animal()    
+  wff5!:  bird() => animal()    
+  wff3!:  robin() => bird()    
+
+
+ CPU time : #.## 
+
+: ;;; Introduction of an or-entailment with two antecedents
+;;;    of which only one of which leads to the consequent.:
+;;; This should not work.
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin() => bird().
+
+  wff3!:  robin() => bird()    
+
+ CPU time : #.## 
+
+: bird() => animal().
+
+  wff5!:  bird() => animal()    
+
+ CPU time : #.## 
+
+: {robin(),sparrow()} v=> {animal()}?
+
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff5!:  bird() => animal()    
+  wff3!:  robin() => bird()    
+
+
+ CPU time : #.## 
+
+: ;;; Introduction of an or-entailment with two antecedents
+;;;    both of which lead to the consequent.
+;;; This should work, but the code doesn't support it.
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin() => bird().
+
+  wff3!:  robin() => bird()    
+
+ CPU time : #.## 
+
+: sparrow() => bird().
+
+  wff5!:  sparrow() => bird()    
+
+ CPU time : #.## 
+
+: bird() => animal().
+
+  wff7!:  bird() => animal()    
+
+ CPU time : #.## 
+
+: {robin(),sparrow()} v=> {animal()}?
+
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff7!:  bird() => animal()    
+  wff5!:  sparrow() => bird()    
+  wff3!:  robin() => bird()    
+
+
+ CPU time : #.## 
+
+: ;;; Introduction of an and-entailment:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin() => bird().
+
+  wff3!:  robin() => bird()    
+
+ CPU time : #.## 
+
+: nestling() or adult().
+
+  wff6!:  adult() or nestling()    
+
+ CPU time : #.## 
+
+: {bird(), adult()} &=> laysEggs().
+
+  wff8!:  {adult(),bird()} &=> {layseggs()}    
+
+ CPU time : #.## 
+
+: {robin(), ~nestling()} &=> laysEggs()?
+
+  wff10!:  {~nestling(),robin()} &=> {layseggs()}    
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff10!:  {~nestling(),robin()} &=> {layseggs()}    
+  wff8!:  {adult(),bird()} &=> {layseggs()}    
+  wff6!:  adult() or nestling()    
+  wff3!:  robin() => bird()    
+
+
+ CPU time : #.## 
+
+: ;;; Introduction of an and-entailment with two consequents:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin() => bird().
+
+  wff3!:  robin() => bird()    
+
+ CPU time : #.## 
+
+: nestling() or adult().
+
+  wff6!:  adult() or nestling()    
+
+ CPU time : #.## 
+
+: {adult(),bird()} &=> {animal(), laysEggs()}.
+
+  wff9!:  {adult(),bird()} &=> {layseggs(),animal()}    
+
+ CPU time : #.## 
+
+: {robin(), ~nestling()} &=> {animal(), laysEggs()}?
+
+  wff11!:  {~nestling(),robin()} &=> {layseggs(),animal()}    
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff11!:  {~nestling(),robin()} &=> {layseggs(),animal()}    
+  wff9!:  {adult(),bird()} &=> {layseggs(),animal()}    
+  wff6!:  adult() or nestling()    
+  wff3!:  robin() => bird()    
+
+
+ CPU time : #.## 
+
+: ;;; Introduction of an or-entailment which is an instance of the
+;;; antecedent of a quantified rule. This case used to assert pattern
+;;; nodes in early versions of SNePS-2.1 (asserted pattern nodes are
+;;; very dangerous objects). Now the antecedents are properly substituted
+;;; and only if they do not contain any free variables they will get
+;;; asserted in the introduction context:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin(Betty) => bird(Betty).
+
+  wff3!:  robin(betty) => bird(betty)    
+
+ CPU time : #.## 
+
+: sparrow(Betty) => bird(Betty).
+
+  wff5!:  sparrow(betty) => bird(betty)    
+
+ CPU time : #.## 
+
+: bird(Betty) => animal(Betty).
+
+  wff7!:  bird(betty) => animal(betty)    
+
+ CPU time : #.## 
+
+: all(x)(({robin(x),sparrow(x)} v=> {animal(x)})
+       => entails(or{robin(x),sparrow(x)},animal(x))).
+
+  wff8!:  all(x)(({sparrow(x),robin(x)} v=> {animal(x)}) => entails(sparrow(x) or robin(x),animal(x)))    
+
+ CPU time : #.## 
+
+: ;;; This question shows that if we cannot get proper instantiations of the
+;;; variables of the antecedent entailment no introduction will get attempted:
+entails(or{robin(?who),sparrow(?who)},animal(?who))?
+
+
+ CPU time : #.## 
+
+: clear-infer
+
+
+ CPU time : #.## 
+
+: ;;; Now we can bind x to a and hence we are in a position to start
+;;;   entailment introduction.
+;;; This should not work because v=>I is not implemented for multiple antecedents.
+entails(or{robin(Betty),sparrow(Betty)},animal(Betty))?
+
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff8!:  all(x)(({sparrow(x),robin(x)} v=> {animal(x)}) => entails(sparrow(x) or robin(x),animal(x)))    
+  wff7!:  bird(betty) => animal(betty)    
+  wff5!:  sparrow(betty) => bird(betty)    
+  wff3!:  robin(betty) => bird(betty)    
+
+
+ CPU time : #.## 
+
+: ;;; Introduction of an and-entailment which is an instance of the
+;;; antecedent of a quantified rule (similar to previous example):
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin(Betty) => bird(Betty).
+
+  wff3!:  robin(betty) => bird(betty)    
+
+ CPU time : #.## 
+
+: nestling(Betty) or adult(Betty).
+
+  wff6!:  adult(betty) or nestling(betty)    
+
+ CPU time : #.## 
+
+: {bird(Betty),adult(Betty)} &=> {laysEggs(Betty)}.
+
+  wff8!:  {adult(betty),bird(betty)} &=> {layseggs(betty)}    
+
+ CPU time : #.## 
+
+: all(x)(({robin(x),adult(x)} &=> {laysEggs(x)})
+       => entails(and{robin(x),adult(x)},laysEggs(x))).
+
+  wff9!:  all(x)(({adult(x),robin(x)} &=> {layseggs(x)}) => entails(adult(x) and robin(x),layseggs(x)))    
+
+ CPU time : #.## 
+
+: ;;; This should not work.
+entails(and{robin(?who),adult(?who)},laysEggs(?who))?
+
+
+ CPU time : #.## 
+
+: clear-infer
+
+
+ CPU time : #.## 
+
+: ;;; But this should.
+entails(and{robin(Betty),adult(Betty)},laysEggs(Betty))?
+
+  wff11!:  entails(adult(betty) and robin(betty),layseggs(betty))    
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff13!:  {adult(betty),robin(betty)} &=> {layseggs(betty)}    
+  wff11!:  entails(adult(betty) and robin(betty),layseggs(betty))    
+  wff9!:  all(x)(({adult(x),robin(x)} &=> {layseggs(x)}) => entails(adult(x) and robin(x),layseggs(x)))    
+  wff8!:  {adult(betty),bird(betty)} &=> {layseggs(betty)}    
+  wff6!:  adult(betty) or nestling(betty)    
+  wff3!:  robin(betty) => bird(betty)    
+
+
+ CPU time : #.## 
+
+: ;;; Universal introduction (not yet implemented), however, in early
+;;; versions of SNePS-2.1 a query such as the one below would start
+;;; implication introduction with the usual assertion of a pattern node:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: robin(Betty) => animal(Betty).
+
+  wff3!:  robin(betty) => animal(betty)    
+
+ CPU time : #.## 
+
+: all(x)(robin(x) => bird(x)).
+
+  wff4!:  all(x)(robin(x) => bird(x))    
+
+ CPU time : #.## 
+
+: all(x)(bird(x) => animal(x)).
+
+  wff5!:  all(x)(bird(x) => animal(x))    
+
+ CPU time : #.## 
+
+: ;;; Currently this does not derive anything (not even by accident):
+all(x)(robin(x) => animal(x))?
+
+
+ CPU time : #.## 
+
+: list-asserted-wffs
+  wff5!:  all(x)(bird(x) => animal(x))    
+  wff4!:  all(x)(robin(x) => bird(x))    
+  wff3!:  robin(betty) => animal(betty)    
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/ruleintro.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

@@ -1,0 +1,177 @@
+* 
+
+File $DEMO/sneps/freeman.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;;;
+;;; WHO WILL FREEMAN MARRY
+;;; 
+(define member class person age profession agent willmarry)
+
+(member class person age profession agent willmarry)
+
+ CPU time : #.## 
+
+* 
+; Freeman knows 5 women: Ada, Bea, Cyd, Deb, Eve.
+(describe (assert min 13 max 13 arg((build  member (ada bea cyd deb eve) class woman)
+;
+; Two women are over 30, three are under 30.
+(build min 2 max 2
+		  arg ((build person ada age over30)
+		       (build person bea age over30)
+		       (build person cyd age over30)
+		       (build person deb age over30)
+		       (build person eve age over30)))
+(build forall $woman
+		  ant (build member *woman class woman)
+		   cq (build min 1 max 1
+			     arg ((build person *woman age over30)
+				  (build person *woman age under30))))
+;
+; Two women are teachers, three are secretaries.
+(build min 2 max 2
+		  arg ((build person ada profession teacher)
+		       (build person bea profession teacher)
+		       (build person cyd profession teacher)
+		       (build person deb profession teacher)
+		       (build person eve profession teacher)))
+(build forall *woman
+		  ant (build member *woman class woman)
+		   cq (build min 1 max 1
+			     arg ((build person *woman profession teacher)
+				  (build person *woman profession secretary))))
+;
+; Ada and Cyd are in the same age bracket.
+(build member (over30 under30) class age)
+(build forall $age
+		  ant (build member *age class age)
+		  cq (build thresh 1
+			    arg ((build person ada age *age)
+				 (build person cyd age *age))))
+;
+; Deb and Eve are in different age brackets.
+(build forall *age
+		  ant (build member *age class age)
+		  cq (build min 1 max 1
+			    arg ((build person deb age *age)
+				 (build person eve age *age))))
+;
+; Bea and Eve have the same occupation.
+(build member (teacher secretary) class occupation)
+(build forall $occupation
+		  ant (build member *occupation class occupation)
+		  cq (build thresh 1
+			    arg ((build person bea profession *occupation)
+				 (build person eve profession *occupation))))
+;
+; Cyd and Deb have different occupations.
+(build forall *occupation
+		  ant (build member *occupation class occupation)
+		  cq (build min 1 max 1
+			    arg ((build person cyd profession *occupation)
+				 (build person deb profession *occupation))))
+;
+; Of the five women, Freeman will marry the teacher over 30.
+(build min 1 max 1
+		  arg ((build min 2 max 2
+			      arg ((build person ada age over30)
+				   (build person ada profession
+					  teacher)))
+		       (build min 2 max 2
+			      arg ((build person bea age over30)
+				   (build person bea profession
+					  teacher)))
+		       (build min 2 max 2
+			      arg ((build person cyd age over30)
+				   (build person cyd profession
+					  teacher)))
+		       (build min 2 max 2
+			      arg ((build person deb age over30)
+				   (build person deb profession
+					  teacher)))
+		       (build min 2 max 2
+			      arg ((build person eve age over30)
+				   (build person eve profession
+					  teacher)))))
+(build forall *woman
+		  ant (build member *woman class woman)
+		  cq (build thresh 1
+			    arg ((build min 2 max 2
+					arg ((build person *woman age over30)
+					     (build person *woman profession teacher)))
+				 (build agent freeman willmarry *woman)))))))
+(M29! (min |13|) (max |13|)
+ (arg
+  (M28 (forall V1) (ant (P1 (class woman) (member V1)))
+   (cq
+    (P24 (thresh |1|)
+     (arg (P23 (agent freeman) (willmarry V1))
+      (P22 (min |2|) (max |2|)
+       (arg (P5 (person V1) (profession teacher))
+        (P2 (age over30) (person V1))))))))
+  (M27 (min |1|) (max |1|)
+   (arg
+    (M26 (min |2|) (max |2|)
+     (arg (M13 (person eve) (profession teacher))
+      (M6 (age over30) (person eve))))
+    (M25 (min |2|) (max |2|)
+     (arg (M12 (person deb) (profession teacher))
+      (M5 (age over30) (person deb))))
+    (M24 (min |2|) (max |2|)
+     (arg (M11 (person cyd) (profession teacher))
+      (M4 (age over30) (person cyd))))
+    (M23 (min |2|) (max |2|)
+     (arg (M10 (person bea) (profession teacher))
+      (M3 (age over30) (person bea))))
+    (M22 (min |2|) (max |2|)
+     (arg (M9 (person ada) (profession teacher))
+      (M2 (age over30) (person ada))))))
+  (M21 (forall V3) (ant (P15 (class occupation) (member V3)))
+   (cq
+    (P21 (min |1|) (max |1|)
+     (arg (P20 (person deb) (profession V3))
+      (P19 (person cyd) (profession V3))))))
+  (M20 (forall V3) (ant (P15))
+   (cq
+    (P18 (thresh |1|)
+     (arg (P17 (person eve) (profession V3))
+      (P16 (person bea) (profession V3))))))
+  (M19 (class occupation) (member secretary teacher))
+  (M18 (forall V2) (ant (P8 (class age) (member V2)))
+   (cq
+    (P14 (min |1|) (max |1|)
+     (arg (P13 (age V2) (person eve)) (P12 (age V2) (person deb))))))
+  (M17 (forall V2) (ant (P8))
+   (cq
+    (P11 (thresh |1|)
+     (arg (P10 (age V2) (person cyd)) (P9 (age V2) (person ada))))))
+  (M16 (class age) (member under30 over30))
+  (M15 (forall V1) (ant (P1))
+   (cq
+    (P7 (min |1|) (max |1|)
+     (arg (P6 (person V1) (profession secretary)) (P5)))))
+  (M14 (min |2|) (max |2|) (arg (M13) (M12) (M11) (M10) (M9)))
+  (M8 (forall V1) (ant (P1))
+   (cq (P4 (min |1|) (max |1|) (arg (P3 (age under30) (person V1)) (P2)))))
+  (M7 (min |2|) (max |2|) (arg (M6) (M5) (M4) (M3) (M2)))
+  (M1 (class woman) (member eve deb cyd bea ada))))
+
+(M29!)
+
+ CPU time : #.## 
+
+* 
+
+
+End of $DEMO/sneps/freeman.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

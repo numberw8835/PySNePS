@@ -1,0 +1,57 @@
+: 
+
+File $DEMO/snepslog/example1.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: all (x) (a(x) => b(x))
+Warning: Wff (build forall ($x) ant (build r a a1 *x) cq (build r b a1 *x)) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+all (x) (a(x) => c(x))
+Warning: Wff (build forall ($x) ant (build r a a1 *x) cq (build r c a1 *x)) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+all (x) (c(x) and b(x) => d(x))
+Warning: Bad connective in anded sequence at: "=> d(x))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+a(r)
+Warning: Wff (build r a a1 r) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+d(?q)?
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/example1.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

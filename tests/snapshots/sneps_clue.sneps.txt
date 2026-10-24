@@ -1,0 +1,592 @@
+* 
+
+File $DEMO/sneps/clue.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;
+;;; CLUE Reasoning Example from Shapiro, 1979
+;
+(resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+(define member class holder held)
+
+(member class holder held)
+
+ CPU time : #.## 
+
+* 
+;
+^^
+^^> def cards(kind):
+...     """The cards of KIND (suspect, weapon, room, or card for all of them)."""
+...     return snepsul("(find (member- class) {})", kind)
+... 
+^^> @command
+... def suspect(p):
+...     return snepsul("(describe (assert member {0} class suspect) (assert member {0} class card))",
+...                    p)
+... 
+^^> @command
+... def weapon(p):
+...     return snepsul("(describe (assert member {0} class weapon) (assert member {0} class card))",
+...                    p)
+... 
+^^> @command
+... def room(p):
+...     return snepsul("(describe (assert member {0} class room) (assert member {0} class card))",
+...                    p)
+... 
+^^> players = []
+^^> table = []
+^^> 
+^^> @command
+... def clue(*people):
+...     global players, table
+...     players = list(people)
+...     table = players + players
+...     for player in people:
+...         snepsul("(describe (assert member {0} class player) (assert member {0} class hand))",
+...                 player)
+...         for card in cards("card"):
+...             snepsul("(build holder {} held {})", player, card)
+...         snepsul("(describe (assert min {0} max {0} arg (find holder {1})))",
+...                 numdealt(player), player)
+...     for card in cards("card"):
+...         snepsul("(describe (assert min 1 max 1 arg (find held {0})"
+...                 " arg (build holder Envelope held {0})))", card)
+... 
+^^> @command
+... def suggest(player, suspect, weapon, room, responder, card):
+...     for passed in between(player, responder):
+...         has_none(passed, suspect, weapon, room)
+...     if responder is not None:
+...         if card is not None:
+...             snepsul("(describe (add holder {} held {}))", responder, card)
+...         else:
+...             snepsul("(describe (add min 1 max 3 arg ((build holder {0} held {1})"
+...                     " (build holder {0} held {2}) (build holder {0} held {3}))))",
+...                     responder, suspect, weapon, room)
+... 
+^^> def numdealt(player):
+...     """How many cards PLAYER is dealt."""
+...     held, n = numheldcards(), len(players)
+...     return held // n + (0 if players.index(player) + 1 > held % n else 1)
+... 
+^^> def numheldcards():
+...     return len(cards("card")) - 3
+... 
+^^> def between(player1, player2):
+...     """The players after PLAYER1 and before PLAYER2 (all others if PLAYER2 is nil)."""
+...     if player2 is None:
+...         return [p for p in players if p != player1]
+...     after = table[table.index(player1) + 1:]
+...     return after[:after.index(player2)] if player2 in after else after
+... 
+^^> def has_none(player, suspect, weapon, room):
+...     snepsul("(describe (add min 0 max 0 arg ((build holder {0} held {1})"
+...             " (build holder {0} held {2}) (build holder {0} held {3}))))",
+...             player, suspect, weapon, room)
+... 
+^^> def envelope_holds(kind):
+...     """The propositions that the envelope holds a card of KIND."""
+...     return [snepsul("(build holder Envelope held {})", card)[0] for card in cards(kind)]
+... 
+^^> ^^
+
+
+ CPU time : #.## 
+
+* ;
+(suspect Col.\ Mustard)
+(M2! (class card) (member |col. mustard|))
+(M1! (class suspect) (member |col. mustard|))
+
+(M2! M1!)
+
+ CPU time : #.## 
+
+* 
+;
+(suspect Prof.\ Plum)
+(M4! (class card) (member |prof. plum|))
+(M3! (class suspect) (member |prof. plum|))
+
+(M4! M3!)
+
+ CPU time : #.## 
+
+* 
+;
+;(suspect Miss\ Scarlet)
+;
+;(suspect Miss\ Peacock)
+;
+;(suspect Mrs.\ White)
+;
+;(suspect Mr.\ Green)
+;
+(weapon knife)
+(M6! (class card) (member knife))
+(M5! (class weapon) (member knife))
+
+(M6! M5!)
+
+ CPU time : #.## 
+
+* 
+;
+(weapon candlestick)
+(M8! (class card) (member candlestick))
+(M7! (class weapon) (member candlestick))
+
+(M8! M7!)
+
+ CPU time : #.## 
+
+* 
+;
+;(weapon rope)
+;
+;(weapon revolver)
+;
+;(weapon lead\ pipe)
+;
+;(weapon wrench)
+;
+(room hall)
+(M10! (class card) (member hall))
+(M9! (class room) (member hall))
+
+(M10! M9!)
+
+ CPU time : #.## 
+
+* 
+;
+(room lounge)
+(M12! (class card) (member lounge))
+(M11! (class room) (member lounge))
+
+(M12! M11!)
+
+ CPU time : #.## 
+
+* 
+;
+(room dining\ room)
+(M14! (class card) (member |dining room|))
+(M13! (class room) (member |dining room|))
+
+(M14! M13!)
+
+ CPU time : #.## 
+
+* 
+;
+(room kitchen)
+(M16! (class card) (member kitchen))
+(M15! (class room) (member kitchen))
+
+(M16! M15!)
+
+ CPU time : #.## 
+
+* 
+;
+;(room study)
+;
+;(room billiard\ room)
+;
+;(room library)
+;
+;(room conservatory)
+;
+;(room ballroom)
+;
+(describe (assert member Envelope class hand))
+(M17! (class hand) (member envelope))
+
+(M17!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert min 1 max 1 arg (^ envelope_holds("suspect"))))
+(M20! (min |1|) (max |1|)
+ (arg (M18 (held |prof. plum|) (holder envelope))
+  (M19 (held |col. mustard|) (holder envelope))))
+
+(M20!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert min 1 max 1 arg (^ envelope_holds("weapon"))))
+(M23! (min |1|) (max |1|)
+ (arg (M21 (held candlestick) (holder envelope))
+  (M22 (held knife) (holder envelope))))
+
+(M23!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert min 1 max 1 arg (^ envelope_holds("room"))))
+(M28! (min |1|) (max |1|)
+ (arg (M24 (held kitchen) (holder envelope))
+  (M25 (held |dining room|) (holder envelope))
+  (M26 (held lounge) (holder envelope)) (M27 (held hall) (holder envelope))))
+
+(M28!)
+
+ CPU time : #.## 
+
+* 
+;
+(clue Don Chuck Bill Stu)
+(M30! (class hand) (member don))
+(M29! (class player) (member don))
+
+(M39! (min |2|) (max |2|)
+ (arg (M31 (held kitchen) (holder don)) (M32 (held |dining room|) (holder don))
+  (M33 (held lounge) (holder don)) (M34 (held hall) (holder don))
+  (M35 (held candlestick) (holder don)) (M36 (held knife) (holder don))
+  (M37 (held |prof. plum|) (holder don))
+  (M38 (held |col. mustard|) (holder don))))
+
+(M41! (class hand) (member chuck))
+(M40! (class player) (member chuck))
+
+(M50! (min |1|) (max |1|)
+ (arg (M42 (held kitchen) (holder chuck))
+  (M43 (held |dining room|) (holder chuck)) (M44 (held lounge) (holder chuck))
+  (M45 (held hall) (holder chuck)) (M46 (held candlestick) (holder chuck))
+  (M47 (held knife) (holder chuck)) (M48 (held |prof. plum|) (holder chuck))
+  (M49 (held |col. mustard|) (holder chuck))))
+
+(M52! (class hand) (member bill))
+(M51! (class player) (member bill))
+
+(M61! (min |1|) (max |1|)
+ (arg (M53 (held kitchen) (holder bill))
+  (M54 (held |dining room|) (holder bill)) (M55 (held lounge) (holder bill))
+  (M56 (held hall) (holder bill)) (M57 (held candlestick) (holder bill))
+  (M58 (held knife) (holder bill)) (M59 (held |prof. plum|) (holder bill))
+  (M60 (held |col. mustard|) (holder bill))))
+
+(M63! (class hand) (member stu))
+(M62! (class player) (member stu))
+
+(M72! (min |1|) (max |1|)
+ (arg (M64 (held kitchen) (holder stu)) (M65 (held |dining room|) (holder stu))
+  (M66 (held lounge) (holder stu)) (M67 (held hall) (holder stu))
+  (M68 (held candlestick) (holder stu)) (M69 (held knife) (holder stu))
+  (M70 (held |prof. plum|) (holder stu))
+  (M71 (held |col. mustard|) (holder stu))))
+
+(M73! (min |1|) (max |1|)
+ (arg (M24 (held kitchen) (holder envelope)) (M31 (held kitchen) (holder don))
+  (M42 (held kitchen) (holder chuck)) (M53 (held kitchen) (holder bill))
+  (M64 (held kitchen) (holder stu))))
+
+(M74! (min |1|) (max |1|)
+ (arg (M25 (held |dining room|) (holder envelope))
+  (M32 (held |dining room|) (holder don))
+  (M43 (held |dining room|) (holder chuck))
+  (M54 (held |dining room|) (holder bill))
+  (M65 (held |dining room|) (holder stu))))
+
+(M75! (min |1|) (max |1|)
+ (arg (M26 (held lounge) (holder envelope)) (M33 (held lounge) (holder don))
+  (M44 (held lounge) (holder chuck)) (M55 (held lounge) (holder bill))
+  (M66 (held lounge) (holder stu))))
+
+(M76! (min |1|) (max |1|)
+ (arg (M27 (held hall) (holder envelope)) (M34 (held hall) (holder don))
+  (M45 (held hall) (holder chuck)) (M56 (held hall) (holder bill))
+  (M67 (held hall) (holder stu))))
+
+(M77! (min |1|) (max |1|)
+ (arg (M21 (held candlestick) (holder envelope))
+  (M35 (held candlestick) (holder don)) (M46 (held candlestick) (holder chuck))
+  (M57 (held candlestick) (holder bill))
+  (M68 (held candlestick) (holder stu))))
+
+(M78! (min |1|) (max |1|)
+ (arg (M22 (held knife) (holder envelope)) (M36 (held knife) (holder don))
+  (M47 (held knife) (holder chuck)) (M58 (held knife) (holder bill))
+  (M69 (held knife) (holder stu))))
+
+(M79! (min |1|) (max |1|)
+ (arg (M18 (held |prof. plum|) (holder envelope))
+  (M37 (held |prof. plum|) (holder don))
+  (M48 (held |prof. plum|) (holder chuck))
+  (M59 (held |prof. plum|) (holder bill))
+  (M70 (held |prof. plum|) (holder stu))))
+
+(M80! (min |1|) (max |1|)
+ (arg (M19 (held |col. mustard|) (holder envelope))
+  (M38 (held |col. mustard|) (holder don))
+  (M49 (held |col. mustard|) (holder chuck))
+  (M60 (held |col. mustard|) (holder bill))
+  (M71 (held |col. mustard|) (holder stu))))
+
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert holder Don held Col.\ Mustard))
+(M38! (held |col. mustard|) (holder don))
+
+(M38!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert holder Don held knife))
+(M36! (held knife) (holder don))
+
+(M36!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (deduce (3 0) holder Envelope held $x))
+(M27! (held hall) (holder envelope))
+(M26! (held lounge) (holder envelope))
+(M25! (held |dining room|) (holder envelope))
+(M22! (held knife) (holder envelope))
+(M19! (held |col. mustard|) (holder envelope))
+
+(M27! M26! M25! M22! M19!)
+
+ CPU time : #.## 
+
+* 
+;
+(suggest Stu Col.\ Mustard knife kitchen Don knife)
+(M78! (min |1|) (max |1|)
+ (arg (M22! (held knife) (holder envelope)) (M36! (held knife) (holder don))
+  (M47! (held knife) (holder chuck)) (M58! (held knife) (holder bill))
+  (M69! (held knife) (holder stu))))
+(M39! (min |2|) (max |2|)
+ (arg (M31 (held kitchen) (holder don)) (M32 (held |dining room|) (holder don))
+  (M33 (held lounge) (holder don)) (M34 (held hall) (holder don))
+  (M35 (held candlestick) (holder don)) (M36!)
+  (M37 (held |prof. plum|) (holder don))
+  (M38! (held |col. mustard|) (holder don))))
+
+
+ CPU time : #.## 
+
+* 
+;
+(suggest Don Col.\ Mustard knife dining\ room Stu dining\ room)
+
+ A contradiction was detected within context default-defaultct.
+ The contradiction involves the proposition you want to assert:
+   (M81! (min 0) (max 0)
+ (arg (M49 (held (|col. mustard|)) (holder (chuck)))
+  (M47! (held (knife)) (holder (chuck)))
+  (M43 (held (|dining room|)) (holder (chuck))))) 
+ and the previously existing proposition:
+   (M47! (held (knife)) (holder (chuck)))
+
+
+ You have the following options:
+  1. [a] to attempt to resolve the contradiction automatically 
+  2. [c] to continue anyway, knowing that a contradiction is derivable;
+  3. [r] to revise the inconsistent part of the context manually
+  4. [d] to discard this contradictory new assertion from the context
+ (please type a, c, r or d)
+=><= 
+;
+(suggest Chuck Prof.\ Plum candlestick lounge Bill nil)Please type a, c, r or d
+=><= 
+;
+(suggest Bill Prof.\ Plum knife hall Don knife)Please type a, c, r or d
+=><= 
+;
+(suggest Stu Prof.\ Plum candlestick dining\ room nil nil)Please type a, c, r or d
+=><= 
+;
+(suggest Don Col.\ Mustard knife hall Chuck hall)Please type a, c, r or d
+=><= 
+;
+(describe (deduce 0 holder Envelope held *x))Please type a, c, r or d
+=><= 
+
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 : (M50! (min 1) (max 1)
+ (arg (M42 (held (kitchen)) (holder (chuck)))
+  (M43 (held (|dining room|)) (holder (chuck)))
+  (M44 (held (lounge)) (holder (chuck))) (M45 (held (hall)) (holder (chuck)))
+  (M46 (held (candlestick)) (holder (chuck)))
+  (M47! (held (knife)) (holder (chuck)))
+  (M48 (held (|prof. plum|)) (holder (chuck)))
+  (M49 (held (|col. mustard|)) (holder (chuck)))))          (3 supported propositions: (M78! M50! M47!) )
+
+ 2 : (M81! (min 0) (max 0)
+ (arg (M49 (held (|col. mustard|)) (holder (chuck)))
+  (M47! (held (knife)) (holder (chuck)))
+  (M43 (held (|dining room|)) (holder (chuck)))))          (1 supported proposition: (M81!) )
+
+
+=><= 
+
+ A contradiction was detected within context default-defaultct.
+ The contradiction involves the newly derived proposition:
+   (M50! (min 1) (max 1)
+ (arg (M42 (held (kitchen)) (holder (chuck)))
+  (M43 (held (|dining room|)) (holder (chuck)))
+  (M44 (held (lounge)) (holder (chuck))) (M45 (held (hall)) (holder (chuck)))
+  (M46 (held (candlestick)) (holder (chuck)))
+  (M47 (held (knife)) (holder (chuck)))
+  (M48 (held (|prof. plum|)) (holder (chuck)))
+  (M49 (held (|col. mustard|)) (holder (chuck))))) 
+ and the previously existing proposition:
+   (M82! (thresh 1) (threshmax 1)
+ (arg (M42 (held (kitchen)) (holder (chuck)))
+  (M43 (held (|dining room|)) (holder (chuck)))
+  (M44 (held (lounge)) (holder (chuck))) (M45 (held (hall)) (holder (chuck)))
+  (M46 (held (candlestick)) (holder (chuck)))
+  (M47 (held (knife)) (holder (chuck)))
+  (M48 (held (|prof. plum|)) (holder (chuck)))
+  (M49 (held (|col. mustard|)) (holder (chuck)))))
+ You have the following options:
+  1. [A]ttempt to resolve the contradiction automatically;
+  2. [C]ontinue anyway, knowing that a contradiction is derivable;
+  3. [R]e-start the exact same run in a different context which is
+     not inconsistent;
+  4. [D]rop the run altogether.
+
+ (please type a, c, r or d)
+=><= 
+
+ The context (M80! M79! M78! M77! M76! M75! M74! M73! M72! M63! M62! M61! M52! M51! M41! M40! M39! M38! M36! M30! M29! M28! M23! M20! M17! M16! M15! M14! M13! M12! M11! M10! M9! M8! M7! M6! M5! M4! M3! M2! M1!)
+  that you are trying to build is inconsistent.
+
+
+ You have the following options:
+  1. [y]es, create the context anyway, knowing that a contradiction is derivable;
+  2. [n]o,don't create the context.
+ (please type y or n)
+=><= 
+
+ A contradiction was detected within context default-defaultct.
+ The contradiction involves the proposition you want to assert:
+   (M90! (min 0) (max 0)
+ (arg (M60 (held (|col. mustard|)) (holder (bill)))
+  (M58! (held (knife)) (holder (bill)))
+  (M54 (held (|dining room|)) (holder (bill))))) 
+ and the previously existing proposition:
+   (M58! (held (knife)) (holder (bill)))
+
+
+ You have the following options:
+  1. [a] to attempt to resolve the contradiction automatically 
+  2. [c] to continue anyway, knowing that a contradiction is derivable;
+  3. [r] to revise the inconsistent part of the context manually
+  4. [d] to discard this contradictory new assertion from the context
+ (please type a, c, r or d)
+=><= 
+ Please choose from the following hypotheses the one that you would 
+ least like to keep:
+
+ 1 : (M61! (min 1) (max 1)
+ (arg (M53 (held (kitchen)) (holder (bill)))
+  (M54 (held (|dining room|)) (holder (bill)))
+  (M55 (held (lounge)) (holder (bill))) (M56 (held (hall)) (holder (bill)))
+  (M57 (held (candlestick)) (holder (bill)))
+  (M58! (held (knife)) (holder (bill)))
+  (M59 (held (|prof. plum|)) (holder (bill)))
+  (M60 (held (|col. mustard|)) (holder (bill)))))          (9 supported propositions: (M82! M80! M78! M74! M61! M58! M49! M47! M43!) )
+
+ 2 : (M90! (min 0) (max 0)
+ (arg (M60 (held (|col. mustard|)) (holder (bill)))
+  (M58! (held (knife)) (holder (bill)))
+  (M54 (held (|dining room|)) (holder (bill)))))          (1 supported proposition: (M90!) )
+
+
+=><= 
+
+ A contradiction was detected within context default-defaultct.
+ The contradiction involves the newly derived proposition:
+   (M61! (min 1) (max 1)
+ (arg (M53 (held (kitchen)) (holder (bill)))
+  (M54 (held (|dining room|)) (holder (bill)))
+  (M55 (held (lounge)) (holder (bill))) (M56 (held (hall)) (holder (bill)))
+  (M57 (held (candlestick)) (holder (bill)))
+  (M58 (held (knife)) (holder (bill)))
+  (M59 (held (|prof. plum|)) (holder (bill)))
+  (M60 (held (|col. mustard|)) (holder (bill))))) 
+ and the previously existing proposition:
+   (M91! (thresh 1) (threshmax 1)
+ (arg (M53 (held (kitchen)) (holder (bill)))
+  (M54 (held (|dining room|)) (holder (bill)))
+  (M55 (held (lounge)) (holder (bill))) (M56 (held (hall)) (holder (bill)))
+  (M57 (held (candlestick)) (holder (bill)))
+  (M58 (held (knife)) (holder (bill)))
+  (M59 (held (|prof. plum|)) (holder (bill)))
+  (M60 (held (|col. mustard|)) (holder (bill)))))
+ You have the following options:
+  1. [A]ttempt to resolve the contradiction automatically;
+  2. [C]ontinue anyway, knowing that a contradiction is derivable;
+  3. [R]e-start the exact same run in a different context which is
+     not inconsistent;
+  4. [D]rop the run altogether.
+
+ (please type a, c, r or d)
+=><= 
+
+ The context (M80! M79! M78! M77! M76! M75! M74! M73! M72! M63! M62! M52! M51! M41! M40! M39! M38! M36! M30! M29! M28! M23! M20! M17! M16! M15! M14! M13! M12! M11! M10! M9! M8! M7! M6! M5! M4! M3! M2! M1!)
+  that you are trying to build is inconsistent.
+
+
+ You have the following options:
+  1. [y]es, create the context anyway, knowing that a contradiction is derivable;
+  2. [n]o,don't create the context.
+ (please type y or n)
+=><= 
+(M74! (min |1|) (max |1|)
+ (arg (M25! (held |dining room|) (holder envelope))
+  (M32 (held |dining room|) (holder don))
+  (M43! (held |dining room|) (holder chuck))
+  (M54! (held |dining room|) (holder bill))
+  (M65! (held |dining room|) (holder stu))))
+(M72! (min |1|) (max |1|)
+ (arg (M64 (held kitchen) (holder stu)) (M65!) (M66 (held lounge) (holder stu))
+  (M67 (held hall) (holder stu)) (M68 (held candlestick) (holder stu))
+  (M69! (held knife) (holder stu)) (M70 (held |prof. plum|) (holder stu))
+  (M71 (held |col. mustard|) (holder stu))))
+
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/clue.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

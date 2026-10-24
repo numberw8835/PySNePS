@@ -1,0 +1,345 @@
+* 
+
+File $DEMO/sneps/sneps79.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* 
+;;; Copyright (C) 1984--2013
+;;; Research Foundation of State University of New York
+
+;;; Version: $Id: sneps79.sneps,v 
+
+;;; This file is part of SNePS.
+
+;; $BEGIN LICENSE$
+
+;;; The contents of this file are subject to the University at
+;;; Buffalo Public License Version 1.0 (the "License"); you may
+;;; not use this file except in compliance with the License. You
+;;; may obtain a copy of the License at 
+;;; http://www.cse.buffalo. edu/sneps/Downloads/ubpl.pdf.
+;;; 
+;;; Software distributed under the License is distributed on an
+;;; "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express
+;;; or implied. See the License for the specific language gov
+;;; erning rights and limitations under the License.
+;;; 
+;;; The Original Code is SNePS 2.8.
+;;; 
+;;; The Initial Developer of the Original Code is Research Foun
+;;; dation of State University of New York, on behalf of Univer
+;;; sity at Buffalo.
+;;; 
+;;; Portions created by the Initial Developer are Copyright (C)
+;;; 2011 Research Foundation of State University of New York, on
+;;; behalf of University at Buffalo. All Rights Reserved.
+
+
+;; $END LICENSE$
+
+
+; Examples based on the figures of S. C. Shapiro, The SNePS Semantic Network
+; Processing System, in N. Findler, ed. Associative Networks: Representation
+; and Use of Knowledge by Computers, Academic Press, 1979, 179-203.
+;
+^ net.infertrace = None
+
+
+ CPU time : #.## 
+
+* ;
+; Fig. 3
+(define member class)
+
+(member class)
+
+ CPU time : #.## 
+
+* 
+(assert member moby-dick class whale)
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+(build member moby-dick class $x)
+SNePS ERROR: Invalid top SNePSUL form: (build member moby-dick class $x)
+Occurred in module top-evaluator in function topsneval
+
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 4
+(assert member orca class whale)
+
+(M2!)
+
+ CPU time : #.## 
+
+*  = new
+
+(M2)
+
+ CPU time : #.## 
+
+* ;
+; Fig. 5
+(define agent verb object)
+
+(agent verb object)
+
+ CPU time : #.## 
+
+* 
+(dump (assert agent john verb knows object *new) *new)
+(M3! (agent (john) object (M2!) verb (knows)))
+(M2! (object- (M3!) class (whale) member (orca)))
+
+(M3! M2!)
+
+ CPU time : #.## 
+
+* 
+(describe m3)
+(M3! (agent john) (object (M2! (class whale) (member orca))) (verb knows))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 6
+(describe (find member moby-dick class whale))
+(M1! (class whale) (member moby-dick))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+(find member- (find class whale))
+
+(orca moby-dick)
+
+ CPU time : #.## 
+
+* 
+(describe (find verb knows object (find class whale)))
+(M3! (agent john) (object (M2! (class whale) (member orca))) (verb knows))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 7
+(find verb knows object (find member ?known-whale class whale))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+*known-whale
+
+(orca)
+
+ CPU time : #.## 
+
+* ;
+; Fig. 8
+(assert agent john verb knows object m3)
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+(assert agent henry verb knows object m3)
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+(describe (find agent ?x verb knows
+                object (find agent ?x verb knows)))
+
+
+ CPU time : #.## 
+
+* 
+*x
+
+
+ CPU time : #.## 
+
+* ;
+; Fig. 9
+(find member- (find class whale) - (find object- (find verb knows)))
+
+(moby-dick)
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 10
+(find member- (find class whale) _ (object-))
+
+(moby-dick)
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 18
+(assert forall $man
+       ant (build member *man class man)
+       cq  (build evb $woman min 2 max 2
+                  arg ((build member *woman class woman)
+                       (build agent *man verb loves object *woman))))
+SNePS ERROR: evb is not a relation
+Occurred in module relationset-evaluator in function rseval
+
+
+ CPU time : #.## 
+
+* 
+(assert forall $r
+       ant (build member *r class transitive)
+       cq  (build forall ($x $y $z)
+                  &ant ((build agent *x verb *r object *y)
+                        (build agent *y verb *r object *z))
+                  cq  (build agent *x verb *r object *z)))
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 19
+(assert member john class man)
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+(assert member henry class man)
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+(describe (deduce agent *man verb loves object *woman))
+
+
+ CPU time : #.## 
+
+* 
+(describe (findconstant class woman))
+
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 20
+(assert agent a verb supports object b)
+
+(M10!)
+
+ CPU time : #.## 
+
+* 
+(assert agent b verb supports object c)
+
+(M11!)
+
+ CPU time : #.## 
+
+* 
+(assert agent c verb supports object d)
+
+(M12!)
+
+ CPU time : #.## 
+
+* 
+(assert min 0 max 0
+       arg (build agent b verb supports object e))
+
+(M14!)
+
+ CPU time : #.## 
+
+* 
+(assert member supports class transitive)
+
+(M15!)
+
+ CPU time : #.## 
+
+* 
+(describe (deduce (4 0) agent $x verb supports object $y))
+(M17! (agent a) (object c) (verb supports))
+(M14! (min |0|) (max |0|) (arg (M13 (agent b) (object e) (verb supports))))
+(M12! (agent c) (object d) (verb supports))
+(M11! (agent b) (object c) (verb supports))
+(M10! (agent a) (object b) (verb supports))
+
+(M17! M14! M12! M11! M10!)
+
+ CPU time : #.## 
+
+* 
+;
+; Fig. 21
+; (describe (resume lastinfer)) ;;;; NOT WORKING ;;;;
+;
+; Fig. 22
+(describe (add member sam class man))
+(M18! (class man) (member sam))
+
+(M18!)
+
+ CPU time : #.## 
+
+* 
+(describe (find member b3))
+
+
+ CPU time : #.## 
+
+* 
+;
+; You may now enter any SNePSUL commands.
+; Enter (exit) when done.
+(End of demonstration)
+SNePS ERROR: Invalid top SNePSUL form: (end of demonstration)
+Occurred in module top-evaluator in function topsneval
+
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/sneps79.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

@@ -1,0 +1,102 @@
+: 
+
+File $DEMO/snepslog/pegasus.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ;; Simple demo that shows how SNePSLOG handles contradictions:
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: ;; Tornado is a white horse
+white(tornado).
+
+  wff1!:  white(tornado)    
+
+ CPU time : #.## 
+
+: horse(tornado).
+
+  wff2!:  horse(tornado)    
+
+ CPU time : #.## 
+
+: ;; Horses do not fly
+all (x) (horse(x) => ~flies(x)).
+
+  wff3!:  all(x)(horse(x) => (~flies(x)))    
+
+ CPU time : #.## 
+
+: ;; Winged horses do fly...
+all (x) (winged-horse(x) => flies(x)).
+
+  wff4!:  all(x)(winged-horse(x) => flies(x))    
+
+ CPU time : #.## 
+
+: ;; ...they are horses...
+all (x) (winged-horse(x) => horse(x)).
+
+  wff5!:  all(x)(winged-horse(x) => horse(x))    
+
+ CPU time : #.## 
+
+: ;; ... and they have wings.
+all (x) (winged-horse(x) => has-wings (x)).
+
+  wff6!:  all(x)(winged-horse(x) => has-wings(x))    
+
+ CPU time : #.## 
+
+: ;; Pegasus is a winged horse
+winged-horse(pegasus).
+
+  wff7!:  winged-horse(pegasus)    
+
+ CPU time : #.## 
+
+: ;; Does Pegasus have wings...YES
+has-wings(pegasus)?
+
+  wff8!:  has-wings(pegasus)    
+
+ CPU time : #.## 
+
+: ;; Does Tornado fly? - NO
+flies(tornado)?
+
+  wff11!:  ~flies(tornado)    
+
+ CPU time : #.## 
+
+: ;; Does Pegasus fly? Type in the query and try it out.
+;; flies(pegasus)?
+Warning: Eof Unexpected
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/pegasus.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

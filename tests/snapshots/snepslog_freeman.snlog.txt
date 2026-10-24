@@ -1,0 +1,235 @@
+: 
+
+File $DEMO/snepslog/freeman.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+woman (ada)
+Warning: Wff (build r woman a1 ada) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: woman (bea)
+Warning: Wff (build r woman a1 bea) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: woman (cyd)
+Warning: Wff (build r woman a1 cyd) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: woman (deb)
+Warning: Wff (build r woman a1 deb) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: woman (eve)
+Warning: Wff (build r woman a1 eve) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: andor (3,3)(age(ada, u30),
+	       age(bea, u30),
+	       age(cyd, u30),
+	       age(deb, u30),
+	       age(eve, u30))
+Warning: Wff (build r andor a1 |3| a2 |3|) not followed by terminal punctuation at "(age(ada, u30),
+	       age(bea, u30),
+	       age(cyd, u30),
+	       age(deb, u30),
+	       age(eve, u30))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: andor (2,2)(age(ada, o30),
+	       age(bea, o30),
+	       age(cyd, o30),
+	       age(deb, o30),
+	       age(eve, o30)),
+Warning: Wff (build r andor a1 |2| a2 |2|) not followed by terminal punctuation at "(age(ada, o30),
+	       age(bea, o30),
+	       age(cyd, o30),
+	       age(deb, o30),
+	       age(eve, o30)),
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (woman(x) => andor(1,1)(age(x, u30), age(x, o30)))
+Warning: Wff ((build r age a1 x a2 u30) missing close parenthesis at: ", age(x, o30)))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: andor(2,2) (worker(ada,teacher),
+		  worker(bea,teacher),
+		  worker(cyd,teacher),
+		  worker(deb,teacher),
+		  worker(eve,teacher))
+Warning: Wff ((build r worker a1 ada a2 teacher) missing close parenthesis at: ",
+		  worker(bea,teacher),
+		  worker(cyd,teacher),
+		  worker(deb,teacher),
+		  worker(eve,teacher))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: andor(3,3) (worker(ada,secretary),
+		  worker(bea,secretary),
+		  worker(cyd,secretary),
+		  worker(deb,secretary),
+		  worker(eve,secretary))
+Warning: Wff ((build r worker a1 ada a2 secretary) missing close parenthesis at: ",
+		  worker(bea,secretary),
+		  worker(cyd,secretary),
+		  worker(deb,secretary),
+		  worker(eve,secretary))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (woman(x) => andor(1,1) (worker(x,secretary),
+				       worker(x,teacher)))
+Warning: Wff ((build r worker a1 x a2 secretary) missing close parenthesis at: ",
+				       worker(x,teacher)))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (thresh (1) (age(ada,x), age(cyd,x)))
+Warning: Universally quantified wff all(x)((build r thresh a1 |1|) is missing a close parenthesis at: "(age(ada,x), age(cyd,x)))
+".
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (andor (1,1) (age(deb,x), age(eve,x)))
+Warning: Universally quantified wff all(x)((build r andor a1 |1| a2 |1|) is missing a close parenthesis at: "(age(deb,x), age(eve,x)))
+".
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (thresh (1) (worker(bea,x), worker(eve,x)))
+Warning: Universally quantified wff all(x)((build r thresh a1 |1|) is missing a close parenthesis at: "(worker(bea,x), worker(eve,x)))
+".
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (andor(1,1) (worker(cyd,x), worker(deb,x)))
+Warning: Wff ((build r worker a1 cyd a2 x) missing close parenthesis at: ", worker(deb,x)))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: andor(1,1) (andor(2,2)(age(ada,o30), worker(ada,teacher)),
+		 andor(2,2)(age(bea,o30), worker(bea,teacher)),
+		 andor(2,2)(age(cyd,o30), worker(cyd,teacher)),
+		 andor(2,2)(age(deb,o30), worker(deb,teacher)),
+		 andor(2,2)(age(eve,o30), worker(eve,teacher)))
+Warning: Wff ((build r age a1 ada a2 o30) missing close parenthesis at: ", worker(ada,teacher)),
+		 andor(2,2)(age(bea,o30), worker(bea,teacher)),
+		 andor(2,2)(age(cyd,o30), worker(cyd,teacher)),
+		 andor(2,2)(age(deb,o30), worker(deb,teacher)),
+		 andor(2,2)(age(eve,o30), worker(eve,teacher)))
+"
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: all (x) (thresh (1) (marry(Freeman,x),
+			  age(x, o30) and worker(x, teacher)))
+Warning: Universally quantified wff all(x)((build r thresh a1 |1|) is missing a close parenthesis at: "(marry(Freeman,x),
+			  age(x, o30) and worker(x, teacher)))
+".
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+
+age(ada,o30)
+Warning: Wff (build r age a1 ada a2 o30) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+age(cyd, o30)
+Warning: Wff (build r age a1 cyd a2 o30) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+worker(ada, teacher)
+Warning: Wff (build r worker a1 ada a2 teacher) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+worker(deb, teacher)
+Warning: Wff (build r worker a1 deb a2 teacher) not followed by terminal punctuation at ""
+Continue with SNePSLOG
+
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/freeman.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

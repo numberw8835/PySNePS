@@ -1,0 +1,95 @@
+* 
+
+File $DEMO/sneps/numquant/mother.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* ;
+;  Every person has at most one mother
+;
+(resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+(define member class agent object rela)
+
+(member class agent object rela)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert forall $x
+		  ant (build member *x class person)
+		  cq (build emax 1 pevb $y
+			    &ant (build member *y class person)
+			    cq (build agent *y rela mother object *x))))
+(M1! (forall V1) (ant (P1 (class person) (member V1)))
+ (cq
+  (P4 (pevb V2) (emax |1|) (&ant (P2 (class person) (member V2)))
+   (cq (P3 (agent V2) (object V1) (rela mother))))))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert member jane class person))
+(M2! (class person) (member jane))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member john class person))
+(M3! (class person) (member john))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member mary class person))
+(M4! (class person) (member mary))
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (assert agent jane rela mother object john))
+(M5! (agent jane) (object john) (rela mother))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+;
+(describe (deduce agent mary rela mother object john))
+(M7! (min |0|) (max |0|) (arg (M6 (agent mary) (object john) (rela mother))))
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+
+
+End of $DEMO/sneps/numquant/mother.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 

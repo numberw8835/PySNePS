@@ -1,0 +1,266 @@
+: 
+
+File $DEMO/snepslog/steamroller.snlog is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+: ; Schubert's Steamroller:
+; =======================
+; This SNePSLOG formulation of this popular benchmark for automated
+; deduction systems is due to Carlos Pinto-Ferreira (currently at the
+; Technical University of Lisbon, Portugal). It was created in Fall 1989.
+;
+; Problem definition (taken from M.E. Stickel: Automated Deduction by 
+; Theory Resolution, Proc. of IJCAI 85, p.1184-85):
+;
+; + Wolves, foxes, birds, caterpillars and snails are animals.
+; + There are some of each of them.
+; + There are some grains.
+; + Grains are plants.
+; + Every animal either likes to eat all plants or all animals
+;   much smaller than itself that like to eat some plants.
+; + Caterpillars and snails are much smaller than birds, which
+;   are much smaller than foxes, which in turn are much smaller
+;   than wolves.
+; + Wolves do not like to eat foxes or grains.
+; + Birds like to eat caterpillars but not snails.
+; + Caterpillars and snails like to eat some plants.
+;
+; Therefore:
+;
+; + There is an animal that likes to eat a grain eating animal.
+;
+clearkb
+Knowledge Base Cleared
+
+
+ CPU time : #.## 
+
+: set-mode-1
+
+Net reset
+
+
+ CPU time : #.## 
+
+: 
+					;
+; Wolves, foxes, birds, caterpillars and snails are animals.
+all (x) (Wolf(x) => Animal(x)).
+
+  wff1!:  all(x)(wolf(x) => animal(x))    
+
+ CPU time : #.## 
+
+: all (x) (Fox(x) => Animal(x)).
+
+  wff2!:  all(x)(fox(x) => animal(x))    
+
+ CPU time : #.## 
+
+: all (x) (Bird(x) => Animal(x)).
+
+  wff3!:  all(x)(bird(x) => animal(x))    
+
+ CPU time : #.## 
+
+: all (x) (Caterpillar(x) => Animal(x)).
+
+  wff4!:  all(x)(caterpillar(x) => animal(x))    
+
+ CPU time : #.## 
+
+: all (x) (Snail(x) => Animal(x)).
+
+  wff5!:  all(x)(snail(x) => animal(x))    
+
+ CPU time : #.## 
+
+: ;
+; There are some of each of them.
+; Note: Because the existential quantifier is not yet implemented
+;       existence statements are represented via Skolemization.
+Wolf(w).
+
+  wff6!:  wolf(w)    
+
+ CPU time : #.## 
+
+: Fox(f).
+
+  wff7!:  fox(f)    
+
+ CPU time : #.## 
+
+: Bird(b).
+
+  wff8!:  bird(b)    
+
+ CPU time : #.## 
+
+: Caterpillar(c).
+
+  wff9!:  caterpillar(c)    
+
+ CPU time : #.## 
+
+: Snail(s).
+
+  wff10!:  snail(s)    
+
+ CPU time : #.## 
+
+: ;
+; There are some grains.
+Grain(g).
+
+  wff11!:  grain(g)    
+
+ CPU time : #.## 
+
+: ;
+; Grains are plants.
+all (x) (Grain(x) => Plant(x)).
+
+  wff12!:  all(x)(grain(x) => plant(x))    
+
+ CPU time : #.## 
+
+: ;
+; Every animal either likes to eat all plants or all animals
+; much smaller than itself that like to eat some plants.
+all (x,y) ({Animal(x), Plant(y), ~Eats(x,y)}
+	      &=> {all (z,v) ({Animal(z), Plant(v),Muchsmaller(z,x), Eats(z,v)}
+				       &=> {Eats(x,z)})}).
+
+  wff13!:  all(y,x)({~eats(x,y),plant(y),animal(x)} &=> {all(v,z)({eats(z,v),muchsmaller(z,x),plant(v),animal(z)} &=> {eats(x,z)})})    
+
+ CPU time : #.## 
+
+: all (x,v,z) ({Animal(x), Plant(v), Animal(z),
+	      Muchsmaller(z,x), Eats(z,v), ~Eats(x,z)}
+	        &=> {all (y) (Plant(y) => Eats(x,y))}).
+
+  wff14!:  all(z,v,x)({~eats(x,z),eats(z,v),muchsmaller(z,x),animal(z),plant(v),animal(x)} &=> {all(y)(plant(y) => eats(x,y))})    
+
+ CPU time : #.## 
+
+: all (x,v,z) ({Animal(x), Plant(v), Animal(z),
+	      Muchsmaller(z,x), ~Eats(x,z), ~Eats(x,v)}
+	         &=> {all (y) (Plant(y) =>  ~Eats(z,y))}).
+
+  wff15!:  all(z,v,x)({~eats(x,v),~eats(x,z),muchsmaller(z,x),animal(z),plant(v),animal(x)} &=> {all(y)(plant(y) => (~eats(z,y)))})    
+
+ CPU time : #.## 
+
+: ;
+; Caterpillars and snails are much smaller than birds, which are much 
+; smaller than foxes, which in turn are much smaller than wolves.
+all (x,y) ({Caterpillar(x), Bird(y)} &=> {Muchsmaller(x,y)}).
+
+  wff16!:  all(y,x)({bird(y),caterpillar(x)} &=> {muchsmaller(x,y)})    
+
+ CPU time : #.## 
+
+: all (x,y) ({Snail(x), Bird(y)} &=> {Muchsmaller(x,y)}).
+
+  wff17!:  all(y,x)({bird(y),snail(x)} &=> {muchsmaller(x,y)})    
+
+ CPU time : #.## 
+
+: all (x,y) ({Bird(x), Fox(y)} &=> {Muchsmaller(x,y)}).
+
+  wff18!:  all(y,x)({fox(y),bird(x)} &=> {muchsmaller(x,y)})    
+
+ CPU time : #.## 
+
+: all (x,y) ({Fox(x), Wolf(y)} &=> {Muchsmaller(x,y)}).
+
+  wff19!:  all(y,x)({wolf(y),fox(x)} &=> {muchsmaller(x,y)})    
+
+ CPU time : #.## 
+
+: ;
+; Wolves do not like to eat foxes or grains.
+all (x,y) ({Wolf(x), Fox(y)} &=> {~Eats(x,y)}).
+
+  wff20!:  all(y,x)({fox(y),wolf(x)} &=> {~eats(x,y)})    
+
+ CPU time : #.## 
+
+: all (x,y) ({Wolf(x), Grain(y)} &=> {~Eats(x,y)}).
+
+  wff21!:  all(y,x)({grain(y),wolf(x)} &=> {~eats(x,y)})    
+
+ CPU time : #.## 
+
+: ;
+; Birds like to eat caterpillars but not snails.
+all (x,y) ({Bird(x), Caterpillar(y)} &=> {Eats(x,y)}).
+
+  wff22!:  all(y,x)({caterpillar(y),bird(x)} &=> {eats(x,y)})    
+
+ CPU time : #.## 
+
+: all (x,y) ({Bird(x), Snail(y)} &=> {~Eats(x,y)}).
+
+  wff23!:  all(y,x)({snail(y),bird(x)} &=> {~eats(x,y)})    
+
+ CPU time : #.## 
+
+: ;
+; Caterpillars and snails like to eat some plants.
+all (x) (Caterpillar(x) => Plant(caterpillarfood(x))).
+
+  wff24!:  all(x)(caterpillar(x) => plant(caterpillarfood(x)))    
+
+ CPU time : #.## 
+
+: all (x) (Caterpillar(x) => Eats(x,caterpillarfood(x))).
+
+  wff25!:  all(x)(caterpillar(x) => eats(x,caterpillarfood(x)))    
+
+ CPU time : #.## 
+
+: all (x) (Snail(x) => Plant(snailfood(x))).
+
+  wff26!:  all(x)(snail(x) => plant(snailfood(x)))    
+
+ CPU time : #.## 
+
+: all (x) (Snail(x) => Eats(x,snailfood(x))).
+
+  wff27!:  all(x)(snail(x) => eats(x,snailfood(x)))    
+
+ CPU time : #.## 
+
+: ;
+; Definition of an animal that likes to eat a grain eating animal.
+all (x,y,z) ({Animal(x), Animal(y), Grain(z), Eats(y,z), Eats(x,y)} 
+		    &=> {graineatingeater(x,y)}).
+
+  wff28!:  all(z,y,x)({eats(x,y),eats(y,z),grain(z),animal(y),animal(x)} &=> {graineatingeater(x,y)})    
+
+ CPU time : #.## 
+
+: ;
+; Find all animals that like to eat grain eating animals:
+graineatingeater(?x,?y)?
+
+  wff77!:  graineatingeater(f,b)    
+
+ CPU time : #.## 
+
+: 
+
+End of $DEMO/snepslog/steamroller.snlog demonstration.
+
+
+ CPU time : #.## 
+
+: 
+Bye

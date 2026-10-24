@@ -1,0 +1,298 @@
+* 
+
+File $DEMO/sneps/jobspuzzle.sneps is now the source of input.
+
+  The demo will pause between commands, at that time press
+  RETURN to continue, or ? to see a list of available commands
+
+
+ CPU time : #.## 
+
+* (resetnet t)
+
+Net reset
+
+
+ CPU time : #.## 
+
+* 
+(define member class employee job)
+
+(member class employee job)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Roberta class person))
+(M1! (class person) (member roberta))
+
+(M1!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Thelma class person))
+(M2! (class person) (member thelma))
+
+(M2!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Steve class person))
+(M3! (class person) (member steve))
+
+(M3!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Pete class person))
+(M4! (class person) (member pete))
+
+(M4!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member chef class job))
+(M5! (class job) (member chef))
+
+(M5!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member guard class job))
+(M6! (class job) (member guard))
+
+(M6!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member nurse class job))
+(M7! (class job) (member nurse))
+
+(M7!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member telephone\ operator class job))
+(M8! (class job) (member |telephone operator|))
+
+(M8!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member police\ officer class job))
+(M9! (class job) (member |police officer|))
+
+(M9!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member teacher class job))
+(M10! (class job) (member teacher))
+
+(M10!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member actor class job))
+(M11! (class job) (member actor))
+
+(M11!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member boxer class job))
+(M12! (class job) (member boxer))
+
+(M12!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert forall $person
+		  ant (build member *person class person)
+		  cq (build min 2 max 2
+			    arg ((build employee *person job chef)
+				 (build employee *person job guard)
+				 (build employee *person job nurse)
+				 (build employee *person job telephone\ operator)
+				 (build employee *person job police\ officer)
+				 (build employee *person job teacher)
+				 (build employee *person job actor)
+				 (build employee *person job boxer)))))
+(M13! (forall V1) (ant (P1 (class person) (member V1)))
+ (cq
+  (P10 (min |2|) (max |2|)
+   (arg (P9 (employee V1) (job boxer)) (P8 (employee V1) (job actor))
+    (P7 (employee V1) (job teacher)) (P6 (employee V1) (job |police officer|))
+    (P5 (employee V1) (job |telephone operator|))
+    (P4 (employee V1) (job nurse)) (P3 (employee V1) (job guard))
+    (P2 (employee V1) (job chef))))))
+
+(M13!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert forall $job
+		  ant (build member *job class job)
+		  cq (build min 1 max 1
+			    arg ((build employee Roberta job *job)
+				 (build employee Thelma job *job)
+				 (build employee Steve job *job)
+				 (build employee Pete job *job)))))
+(M14! (forall V2) (ant (P11 (class job) (member V2)))
+ (cq
+  (P16 (min |1|) (max |1|)
+   (arg (P15 (employee pete) (job V2)) (P14 (employee steve) (job V2))
+    (P13 (employee thelma) (job V2)) (P12 (employee roberta) (job V2))))))
+
+(M14!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Roberta class female))
+(M15! (class female) (member roberta))
+
+(M15!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Thelma class female))
+(M16! (class female) (member thelma))
+
+(M16!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Steve class male))
+(M17! (class male) (member steve))
+
+(M17!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert member Pete class male))
+(M18! (class male) (member pete))
+
+(M18!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert forall *person
+		  ant (build member *person class female)
+		  cq (build min 0 max 0
+			    arg ((build employee *person job nurse)
+				 (build employee *person job actor)
+				 (build employee *person job telephone\ operator)))))
+(M19! (forall V1) (ant (P17 (class female) (member V1)))
+ (cq
+  (P18 (min |0|) (max |0|)
+   (arg (P8 (employee V1) (job actor))
+    (P5 (employee V1) (job |telephone operator|))
+    (P4 (employee V1) (job nurse))))))
+
+(M19!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert forall *person
+		  ant (build member *person class male)
+		  cq (build min 0 max 0
+			    arg (build employee *person job chef))))
+(M20! (forall V1) (ant (P19 (class male) (member V1)))
+ (cq (P20 (min |0|) (max |0|) (arg (P2 (employee V1) (job chef))))))
+
+(M20!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert min 0 max 0
+		  arg (build employee Roberta job boxer)))
+(M22! (min |0|) (max |0|) (arg (M21 (employee roberta) (job boxer))))
+
+(M22!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert min 0 max 0
+		  arg ((build employee Pete job nurse)
+		       (build employee Pete job police\ officer)
+		       (build employee Pete job teacher))))
+(M26! (min |0|) (max |0|)
+ (arg (M25 (employee pete) (job teacher))
+  (M24 (employee pete) (job |police officer|))
+  (M23 (employee pete) (job nurse))))
+
+(M26!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert min 0 max 0
+		  arg ((build employee Roberta job chef)
+		       (build employee Roberta job police\ officer))))
+(M29! (min |0|) (max |0|)
+ (arg (M28 (employee roberta) (job |police officer|))
+  (M27 (employee roberta) (job chef))))
+
+(M29!)
+
+ CPU time : #.## 
+
+* 
+(describe (assert forall *person
+		  ant (build member *person class person)
+		  cq (build min 0 max 1
+			    arg ((build employee *person job chef)
+				 (build employee *person job police\ officer)))))
+(M30! (forall V1) (ant (P1 (class person) (member V1)))
+ (cq
+  (P21 (min |0|) (max |1|)
+   (arg (P6 (employee V1) (job |police officer|))
+    (P2 (employee V1) (job chef))))))
+
+(M30!)
+
+ CPU time : #.## 
+
+* 
+(describe (deduce (8 0) employee *person job *job))
+(M35! (min |0|) (max |0|) (arg (M27 (employee roberta) (job chef))))
+(M34! (min |0|) (max |0|)
+ (arg (M28 (employee roberta) (job |police officer|))))
+(M33! (min |0|) (max |0|) (arg (M23 (employee pete) (job nurse))))
+(M32! (min |0|) (max |0|) (arg (M24 (employee pete) (job |police officer|))))
+(M31! (min |0|) (max |0|) (arg (M25 (employee pete) (job teacher))))
+(M22! (min |0|) (max |0|) (arg (M21 (employee roberta) (job boxer))))
+
+(M35! M34! M33! M32! M31! M22!)
+
+ CPU time : #.## 
+
+* 
+
+End of $DEMO/sneps/jobspuzzle.sneps demonstration.
+
+
+ CPU time : #.## 
+
+* 
